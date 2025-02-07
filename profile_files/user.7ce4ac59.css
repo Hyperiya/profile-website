@@ -15,10 +15,7 @@
   --background-color: #2b2d31;
   --foreground-color: #f2f3f5;
 }
-.theme-light:where(.astro-RKRDL5K3) {
-  --background-color: white;
-  --foreground-color: #313338;
-}
+
 .root:where(.astro-RKRDL5K3) {
   border-radius: var(--border-radius);
 }
@@ -103,7 +100,7 @@ svg:where(.astro-RKRDL5K3) {
   opacity: 0;
 }
 .username:where(.astro-RKRDL5K3) {
-  font-size: 11vh;
+  font-size: 14vh;
   margin: 8px 0;
 }
 .userinfo:where(.astro-RKRDL5K3) {
@@ -111,14 +108,38 @@ svg:where(.astro-RKRDL5K3) {
   flex-direction: column;
   justify-content: space-evenly;
 }
+
 .userinfo {
   position: relative;
-  bottom: 2.5vh;
+  bottom: 10vh;
+  left: -10%;
 }
 
-.avatarOnline{
+.activity{
+  color: #8a94a9;
+  left: 1%;
+  bottom: -100%;
+  position: absolute;
+  font-size: 10vh;
+}
+
+.avatarOnline {
   width: 8vw;
   position: relative;
   right: 30%;
   bottom: 5vh;
+  border-radius: 100%;
+  box-shadow: 
+    0 0 0 6px #2b2d31,        /* outer outline using your theme color */
+    inset 0 0 0 10px #2b2d31;  /* inner outline */
+}
+
+* {
+  -ms-overflow-style: none;  /* For Internet Explorer and Edge */
+  scrollbar-width: none;     /* For Firefox */
+}
+
+/* For Webkit browsers (Chrome, Safari, etc.) */
+*::-webkit-scrollbar {
+  display: none;
 }

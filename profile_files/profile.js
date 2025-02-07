@@ -3,7 +3,8 @@ const ws = new WebSocket('ws://localhost:8080');
 ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
     const symbol = document.getElementById("avatarStatus");
-    
+    const activity = document.getElementById("activityStatus");
+
     if (symbol && data.status) {
         switch(data.status) {
             case 'online':
@@ -18,6 +19,10 @@ ws.onmessage = (event) => {
             default:
                 symbol.src = "Assets/offline.webp";
         }
+    }
+    
+    if (activity && data.activity && data.activity != "[object Object]") {
+        activity.innerHTML = data.activity;
     }
 };
 

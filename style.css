@@ -47,6 +47,7 @@ body {
 }
 
 .image-item img {
+  filter: brightness(5%);
   width: 20vw;
   height: 70vh;
   object-fit: cover;
@@ -140,7 +141,7 @@ body {
   scrollbar-width: none;
   -ms-overflow-style: none;
 
-
+  overflow: visible;
   bottom: 1%;
   -webkit-overflow-scrolling: none;
   scrollbar-width: none;
