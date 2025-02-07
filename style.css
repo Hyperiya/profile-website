@@ -1,0 +1,201 @@
+/* 
+TODO: MAKE PROFILE HAVE MY ONLINE/OFFLINE STATUS
+OTHER PROFILES
+BG MUSIC
+*/
+
+body {
+  animation: fadeIn 0.5s ease-out forwards;
+  margin: 0;
+  padding: 0;
+  background-color: #232627;
+}
+
+.image-track-container {
+  width: 100%;
+  position: absolute;
+  top: 50%;              /* Position at 50% from top */
+  transform: translateY(-50%); /* Move up by half its height */
+  overflow-x: scroll;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  box-sizing: border-box;
+}
+
+
+/* Hide scrollbar */
+.image-track-container::-webkit-scrollbar {
+  display: none;
+}
+
+.image-track {
+  display: flex;
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+  gap: 20px;
+  height: 100%;
+}
+
+.image-track.grabbing {
+  cursor: default;
+}
+
+.image-track > :not(.profileFrame) {
+  grid-column: auto;
+}
+
+.image-item img {
+  width: 20vw;
+  height: 70vh;
+  object-fit: cover;
+  -webkit-user-drag: none;
+  object-position: 100% center;
+  max-width: none;
+  max-height: none;
+  transition: all 0.3s ease; /* Changed to 'all' to smooth all transitions */
+  position: relative; /* Added for z-index to work */
+}
+
+.image-item:hover img {
+  width: 30vw;
+  cursor: pointer;
+}
+
+.image-track[data-dragging="true"] .image-item:hover img {
+  width: 20vw;
+  cursor: pointer;
+}
+
+.image-item {
+  display: grid;
+  position: relative;
+  /* This ensures each item maintains its original space */
+  transform-origin: center;
+  transition: all 0.3s ease;
+  gap: 20px;
+  justify-items: center;
+ 
+}
+
+.text-overlay {
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Space Mono', monospace;
+  position: absolute;
+  color: rgb(0, 255, 0);
+  font-size: 2vw;
+  font-weight: bold;
+  z-index: 2;
+  /* Optional: add background for better readability */
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-right: 6px;
+  padding-left: 6px;
+  background-color: rgba(0, 0, 0, 0);
+  border-radius: 5px;
+  /* Optional: hide by default and show on hover */
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/*
+.image-item:hover .text-overlay {
+  background-color: white;
+  color: black;
+}
+
+.image-track[data-dragging="true"] .image-item:hover .text-overlay {
+  background-color: rgba(0, 0, 0, 0);
+  color: rgb(0, 255, 0);;
+}
+*/
+
+
+/* TEXT COLORS */
+
+/* Discord */
+.text-overlay[data-text="discord"] {
+    color: #525dea;
+}
+
+.image-item:hover .text-overlay[data-text="discord"] {
+  background-color: rgb(0, 0, 0);
+  color: #525dea;
+}
+
+.image-track[data-dragging="true"] .image-item:hover .text-overlay[data-text="discord"] {
+  background-color: rgba(0, 0, 0, 0);
+  color: #525dea;
+}
+
+
+/* Your existing .profileFrame styles */
+.profileFrame {
+  overflow-x: none;
+  -webkit-overflow-scrolling: none;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+
+  bottom: 1%;
+  -webkit-overflow-scrolling: none;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  object-fit: cover;
+  width: 0.001vw;
+  height: 20vh;
+  z-index: 1;
+  pointer-events: none; 
+  opacity: 0;
+  position: absolute;
+  transition: all 0.3s ease;
+}
+
+.profileFrame::-webkit-scrollbar {
+  display: none;
+}
+
+.image-item:hover .profileFrame {
+  width: 20vw;
+  opacity: 1;
+  transition: opacity, width 0.3s ease;
+}
+
+
+
+.image-track[data-dragging="true"] .image-item:hover .profileFrame {
+  width: 0vw;
+  opacity: 0;
+}
+
+
+
+.image-track-container,
+.image-track,
+.image-item {
+    animation: unblur 0.5s ease-out forwards;
+}
+
+@keyframes unblur {
+    0% {
+        filter: blur(20px);
+        opacity: 0;
+    }
+    100% {
+        filter: blur(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+  0% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 1;
+  }
+}
