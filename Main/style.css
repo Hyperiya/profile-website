@@ -1,8 +1,17 @@
 /* 
-TODO: MAKE PROFILE HAVE MY ONLINE/OFFLINE STATUS
-OTHER PROFILES
+TODO: 
 BG MUSIC
 */
+
+* {
+  -ms-overflow-style: none;  /* For Internet Explorer and Edge */
+  scrollbar-width: none;     /* For Firefox */
+}
+
+/* For Webkit browsers (Chrome, Safari, etc.) */
+*::-webkit-scrollbar {
+  display: none;
+}
 
 body {
   animation: fadeIn 0.5s ease-out forwards;
@@ -17,9 +26,6 @@ body {
   top: 50%;              /* Position at 50% from top */
   transform: translateY(-50%); /* Move up by half its height */
   overflow-x: scroll;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
   box-sizing: border-box;
 }
 
@@ -47,7 +53,7 @@ body {
 }
 
 .image-item img {
-  filter: brightness(5%);
+  /* filter: brightness(5%); */
   width: 20vw;
   height: 70vh;
   object-fit: cover;
@@ -101,6 +107,7 @@ body {
   /* Optional: hide by default and show on hover */
   opacity: 1;
   transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
 /*
@@ -133,19 +140,87 @@ body {
   color: #525dea;
 }
 
+/* Gamebanana */
+.text-overlay[data-text="gamebanana"] {
+  color: #c39313;
+}
 
-/* Your existing .profileFrame styles */
+.image-item:hover .text-overlay[data-text="gamebanana"] {
+background-color: rgb(0, 0, 0);
+color: #c39313;
+}
+
+.image-track[data-dragging="true"] .image-item:hover .text-overlay[data-text="gamebanana"] {
+background-color: rgba(0, 0, 0, 0);
+color: #c39313  ;
+}
+
+/* Patreon */
+.text-overlay[data-text="patreon"] {
+  color: #f86c59;
+}
+
+.image-item:hover .text-overlay[data-text="patreon"] {
+background-color: rgb(0, 0, 0);
+color: #f86c59;
+}
+
+.image-track[data-dragging="true"] .image-item:hover .text-overlay[data-text="patreon"] {
+background-color: rgba(0, 0, 0, 0);
+color: #f86c59  ;
+}
+
+/* Steam */
+.text-overlay[data-text="steam"] {
+  color: #0a2668;
+}
+
+.image-item:hover .text-overlay[data-text="steam"] {
+background-color: rgb(0, 0, 0);
+color: #0a2668;
+}
+
+.image-track[data-dragging="true"] .image-item:hover .text-overlay[data-text="steam"] {
+background-color: rgba(0, 0, 0, 0);
+color: #0a2668  ;
+}
+
+/* Github */
+.text-overlay[data-text="github"] {
+  color: #2a7aef;
+}
+
+.image-item:hover .text-overlay[data-text="github"] {
+background-color: rgb(0, 0, 0);
+color: #2a7aef;
+}
+
+.image-track[data-dragging="true"] .image-item:hover .text-overlay[data-text="github"] {
+background-color: rgba(0, 0, 0, 0);
+color: #2a7aef;
+}
+
+/* Pinterest */
+.text-overlay[data-text="pinterest"] {
+  color: #e60023;
+}
+
+.image-item:hover .text-overlay[data-text="pinterest"] {
+background-color: rgb(0, 0, 0);
+color: #e60023;
+}
+
+.image-track[data-dragging="true"] .image-item:hover .text-overlay[data-text="pinterest"] {
+background-color: rgba(0, 0, 0, 0);
+color: #e60023;
+}
+
+
+/* My existing .profileFrame styles */
 .profileFrame {
-  overflow-x: none;
-  -webkit-overflow-scrolling: none;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-
   overflow: visible;
   bottom: 1%;
-  -webkit-overflow-scrolling: none;
   scrollbar-width: none;
-  -ms-overflow-style: none;
   object-fit: cover;
   width: 0.001vw;
   height: 20vh;
@@ -166,13 +241,45 @@ body {
   transition: opacity, width 0.3s ease;
 }
 
-
-
 .image-track[data-dragging="true"] .image-item:hover .profileFrame {
   width: 0vw;
   opacity: 0;
 }
 
+/* Steam Frame */
+
+.steamFrame {
+  border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+  position: absolute;
+  overflow: visible;
+  width: 0.001vw;
+  font-family: "Motiva Sans", Sans-serif;
+  font-weight: normal; 
+  bottom: 10%;
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.steamFrame::-webkit-scrollbar {
+  display: none;
+}
+
+.image-item:hover .steamFrame {
+  width: 20vw;
+  opacity: 1;
+  transition: opacity, width 0.3s ease;
+}
+
+.image-track[data-dragging="true"] .image-item:hover .steamFrame {
+  width: 0vw;
+  opacity: 0;
+}
+
+
+/* Github */
 
 
 .image-track-container,

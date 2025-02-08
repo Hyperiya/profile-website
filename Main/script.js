@@ -2,8 +2,6 @@ const track = document.querySelector(".image-track");
 const images = track.getElementsByTagName("img");
 // Profile
 
-
-
 // IMAGE TRACK
 // Initiate Variables
 track.dataset.mouseDownAt = "0";
@@ -55,7 +53,7 @@ window.onmousemove = e => {
     const percentage = (mouseDelta / maxDelta) * -100;
     const nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage;
 
-    const nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 50), -125);
+    const nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 50), -75);
 
     track.dataset.percentage = nextPercentage;
 
@@ -92,7 +90,7 @@ window.ontouchmove = e => {
 
     const percentage = (touchDelta / maxDelta) * -100;
     const nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage;
-    const nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 50), -50);
+    const nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 50), -100);
 
     track.dataset.percentage = nextPercentage;
 

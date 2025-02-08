@@ -115,12 +115,14 @@ svg:where(.astro-RKRDL5K3) {
   left: -10%;
 }
 
-.activity{
+.activity {
+  word-wrap:unset;
   color: #8a94a9;
   left: 1%;
   bottom: -100%;
   position: absolute;
   font-size: 10vh;
+  width: 100vw;
 }
 
 .avatarOnline {

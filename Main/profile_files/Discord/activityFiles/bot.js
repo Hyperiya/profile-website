@@ -1,7 +1,8 @@
-const { Client, GatewayIntentBits } = require('discord.js');
-const WebSocket = require('ws');
-const wss = new WebSocket.Server({ port: 8080 });
-require('dotenv').config();
+import { Client, GatewayIntentBits } from 'discord.js';
+import { WebSocket } from 'ws';
+import dotenv from 'dotenv';
+
+
 
 // Create Discord client with necessary intents
 const client = new Client({ 
@@ -11,6 +12,9 @@ const client = new Client({
         GatewayIntentBits.GuildMembers
     ] 
 });
+
+dotenv.config();
+const wss = new WebSocket.Server({ port: 8080 });
 
 // Check if bot token exists
 if (!process.env.DISCORD_BOT_TOKEN) {
@@ -125,7 +129,7 @@ wss.on('connection', (ws) => {
                 console.log(newPresence)
                 ws.send(JSON.stringify({ 
                     status: newPresence.status || 'offline',
-                    activity: newPresence.activities[0].state || null
+                    activity: newPresence.activities[0]?.state || null
                 }));
             }
         }

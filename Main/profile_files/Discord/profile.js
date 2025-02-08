@@ -23,6 +23,20 @@ ws.onmessage = (event) => {
     
     if (activity && data.activity && data.activity != "[object Object]") {
         activity.innerHTML = data.activity;
+    } else {
+        switch(data.status) {
+            case 'online':
+                activity.innerHTML = "Online";
+                break;
+            case 'idle':
+                activity.innerHTML = "Idle";
+                break;
+            case 'dnd':
+                activity.innerHTML = "Do Not Disturb";
+                break;
+            default:
+                activity.innerHTML = "Offline";
+        }
     }
 };
 
