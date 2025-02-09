@@ -3,6 +3,16 @@ TODO:
 BG MUSIC
 */
 
+:root {
+  --discord-color: #525dea;
+  --gamebanana-color: #c39313;
+  --patreon-color: #f86c59;
+  --steam-color: #0a2668;
+  --github-color: #2a7aef;
+  --pinterest-color: #e60023;
+}
+
+
 * {
   -ms-overflow-style: none;  /* For Internet Explorer and Edge */
   scrollbar-width: none;     /* For Firefox */
@@ -20,20 +30,54 @@ body {
   background-color: #232627;
 }
 
+/* Email Icon */
+.email-icon {
+  opacity: 0.8;
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1000;
+}
+
+.icon-mask {
+  width: 40px;
+  height: 40px;
+  background-color: #ffffff; /* Change this to match your theme */
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z'%3E%3C/path%3E%3Cpolyline points='22,6 12,13 2,6'%3E%3C/polyline%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z'%3E%3C/path%3E%3Cpolyline points='22,6 12,13 2,6'%3E%3C/polyline%3E%3C/svg%3E");
+  -webkit-mask-size: cover;
+  mask-size: cover;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.icon-mask:hover {
+  transform: scale(1.1);
+  background-color: #cccccc; /* Hover color */
+}
+
+/* Optional: Add animation on hover */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.icon-mask:hover {
+  animation: pulse 1s infinite;
+  background-color: #cccccc;
+}
+
+
+
+/* Image Track */
 .image-track-container {
   width: 100%;
   position: absolute;
   top: 50%;              /* Position at 50% from top */
   transform: translateY(-50%); /* Move up by half its height */
-  overflow-x: scroll;
   box-sizing: border-box;
 }
 
-
-/* Hide scrollbar */
-.image-track-container::-webkit-scrollbar {
-  display: none;
-}
 
 .image-track {
   display: flex;
@@ -57,12 +101,15 @@ body {
   width: 20vw;
   height: 70vh;
   object-fit: cover;
-  -webkit-user-drag: none;
   object-position: 100% center;
-  max-width: none;
-  max-height: none;
-  transition: all 0.3s ease; /* Changed to 'all' to smooth all transitions */
+  -webkit-user-drag: none;
+
+  border-radius: 1vmin;
+
+  transition: all 0.3s ease-out; /* Changed to 'all' to smooth all transitions */
   position: relative; /* Added for z-index to work */
+  will-change: transform; /* Optimize for animations */
+  backface-visibility: hidden; /* Reduce flickering */
 }
 
 .image-item:hover img {
@@ -80,11 +127,12 @@ body {
   position: relative;
   /* This ensures each item maintains its original space */
   transform-origin: center;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease-in;
   gap: 20px;
   justify-items: center;
- 
+  perspective: 1000px; /* Better 3D performance */
 }
+
 
 .text-overlay {
   text-align: center;
@@ -97,122 +145,30 @@ body {
   font-size: 2vw;
   font-weight: bold;
   z-index: 2;
-  /* Optional: add background for better readability */
-  padding-top: 1px;
-  padding-bottom: 1px;
-  padding-right: 6px;
-  padding-left: 6px;
-  background-color: rgba(0, 0, 0, 0);
+  padding: 1px 6px;
+  background-color: transparent;
   border-radius: 5px;
-  /* Optional: hide by default and show on hover */
   opacity: 1;
   transition: opacity 0.3s ease;
   pointer-events: none;
 }
 
-/*
-.image-item:hover .text-overlay {
-  background-color: white;
-  color: black;
-}
-
-.image-track[data-dragging="true"] .image-item:hover .text-overlay {
-  background-color: rgba(0, 0, 0, 0);
-  color: rgb(0, 255, 0);;
-}
-*/
-
-
 /* TEXT COLORS */
+.text-overlay[data-text="discord"] { color: var(--discord-color); }
+.text-overlay[data-text="gamebanana"] { color: var(--gamebanana-color); }
+.text-overlay[data-text="patreon"] { color: var(--patreon-color); }
+.text-overlay[data-text="steam"] { color: var(--steam-color); }
+.text-overlay[data-text="github"] { color: var(--github-color); }
+.text-overlay[data-text="pinterest"] { color: var(--pinterest-color); }
 
-/* Discord */
-.text-overlay[data-text="discord"] {
-    color: #525dea;
-}
-
-.image-item:hover .text-overlay[data-text="discord"] {
+/* Hover states for all platforms */
+.image-item:hover .text-overlay {
   background-color: rgb(0, 0, 0);
-  color: #525dea;
 }
 
-.image-track[data-dragging="true"] .image-item:hover .text-overlay[data-text="discord"] {
-  background-color: rgba(0, 0, 0, 0);
-  color: #525dea;
-}
-
-/* Gamebanana */
-.text-overlay[data-text="gamebanana"] {
-  color: #c39313;
-}
-
-.image-item:hover .text-overlay[data-text="gamebanana"] {
-background-color: rgb(0, 0, 0);
-color: #c39313;
-}
-
-.image-track[data-dragging="true"] .image-item:hover .text-overlay[data-text="gamebanana"] {
-background-color: rgba(0, 0, 0, 0);
-color: #c39313  ;
-}
-
-/* Patreon */
-.text-overlay[data-text="patreon"] {
-  color: #f86c59;
-}
-
-.image-item:hover .text-overlay[data-text="patreon"] {
-background-color: rgb(0, 0, 0);
-color: #f86c59;
-}
-
-.image-track[data-dragging="true"] .image-item:hover .text-overlay[data-text="patreon"] {
-background-color: rgba(0, 0, 0, 0);
-color: #f86c59  ;
-}
-
-/* Steam */
-.text-overlay[data-text="steam"] {
-  color: #0a2668;
-}
-
-.image-item:hover .text-overlay[data-text="steam"] {
-background-color: rgb(0, 0, 0);
-color: #0a2668;
-}
-
-.image-track[data-dragging="true"] .image-item:hover .text-overlay[data-text="steam"] {
-background-color: rgba(0, 0, 0, 0);
-color: #0a2668  ;
-}
-
-/* Github */
-.text-overlay[data-text="github"] {
-  color: #2a7aef;
-}
-
-.image-item:hover .text-overlay[data-text="github"] {
-background-color: rgb(0, 0, 0);
-color: #2a7aef;
-}
-
-.image-track[data-dragging="true"] .image-item:hover .text-overlay[data-text="github"] {
-background-color: rgba(0, 0, 0, 0);
-color: #2a7aef;
-}
-
-/* Pinterest */
-.text-overlay[data-text="pinterest"] {
-  color: #e60023;
-}
-
-.image-item:hover .text-overlay[data-text="pinterest"] {
-background-color: rgb(0, 0, 0);
-color: #e60023;
-}
-
-.image-track[data-dragging="true"] .image-item:hover .text-overlay[data-text="pinterest"] {
-background-color: rgba(0, 0, 0, 0);
-color: #e60023;
+/* Reset background when dragging */
+.image-track[data-dragging="true"] .image-item:hover .text-overlay {
+  background-color: transparent;
 }
 
 
@@ -220,7 +176,6 @@ color: #e60023;
 .profileFrame {
   overflow: visible;
   bottom: 1%;
-  scrollbar-width: none;
   object-fit: cover;
   width: 0.001vw;
   height: 20vh;
@@ -229,10 +184,6 @@ color: #e60023;
   opacity: 0;
   position: absolute;
   transition: all 0.3s ease;
-}
-
-.profileFrame::-webkit-scrollbar {
-  display: none;
 }
 
 .image-item:hover .profileFrame {
@@ -252,8 +203,9 @@ color: #e60023;
   border-radius: 10px;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
+
   position: absolute;
-  overflow: visible;
+  overflow: hidden;
   width: 0.001vw;
   font-family: "Motiva Sans", Sans-serif;
   font-weight: normal; 
@@ -263,47 +215,248 @@ color: #e60023;
   pointer-events: none;
 }
 
-.steamFrame::-webkit-scrollbar {
-  display: none;
-}
-
 .image-item:hover .steamFrame {
-  width: 330px;
+  width: 20vw;
+  max-width: 330px;
   opacity: 1;
   transition: opacity, width 0.3s ease;
 }
 
 .image-track[data-dragging="true"] .image-item:hover .steamFrame {
-  width: 0vw;
+  width: 0.001vw;
   opacity: 0;
 }
 
 
-/* Github */
+/* Music */
 
-
-.image-track-container,
-.image-track,
-.image-item {
-    animation: unblur 0.5s ease-out forwards;
+/* Music Toggle Button */
+#musicToggle {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transform: translate(25%, 0%);
 }
 
+#musicToggle:hover {
+  transform: translate(25%, 0%) scale(1.15);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+#musicToggle:active {
+  transform: translate(25%, 0%) scale(0.95);
+}
+
+
+/* Default state - showing volume */
+.volume-waves {
+  opacity: 1;
+}
+
+.mute-x {
+  opacity: 0;
+}
+
+/* Muted state */
+[data-muted="true"] .volume-waves {
+  opacity: 0;
+}
+
+[data-muted="true"] .mute-x {
+  opacity: 1;
+}
+
+.volume-icon:hover {
+  opacity: 0.8;
+}
+
+/* Controls */
+.audio-controls {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+  background: rgba(18, 18, 18, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  padding: 12px;
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+
+  width: 40px;
+  height: 40px;
+}
+
+.audio-controls:hover {
+  background: rgba(24, 24, 24, 0.95);
+  transform: scale(1.02);
+}
+
+.audio-controls:hover {
+  width: auto;
+  border-radius: 50px;
+  background: rgba(24, 24, 24, 0.95);
+  padding: 12px 16px;
+  transform: scale(1.02);
+}
+
+/* Volume Slider Container */
+.volume-slider-container {
+  width: 0;
+  overflow: hidden;
+  transition: width 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+}
+
+.audio-controls:hover .volume-slider-container {
+  width: 100px;
+  margin-left: 8px;
+}
+
+/* Volume Slider */
+#volumeSlider {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+#volumeSlider::-webkit-slider-runnable-track {
+  background: linear-gradient(to right, 
+    white var(--volume-percentage, 50%), 
+    rgba(255, 255, 255, 0.2) var(--volume-percentage, 50%)
+  );
+  border-radius: 2px;
+  height: 4px;
+}
+
+
+#volumeSlider::-moz-range-progress {
+  background-color: white;
+  border-radius: 2px;
+}
+
+/* For MS browsers */
+#volumeSlider::-ms-fill-lower {
+  background-color: white;
+  border-radius: 2px;
+}
+
+/* Slider Thumb */
+#volumeSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+#volumeSlider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Hover effects for slider thumb */
+#volumeSlider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  background: #ffffff;
+}
+
+#volumeSlider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+  background: #ffffff;
+}
+
+/* Active state for slider */
+#volumeSlider:active::-webkit-slider-thumb {
+  transform: scale(0.95);
+}
+
+#volumeSlider:active::-moz-range-thumb {
+  transform: scale(0.95);
+}
+
+/* Track hover effect */
+#volumeSlider:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Optional: Animation for when music is playing */
+@keyframes musicPlaying {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.playing #musicToggle {
+  animation: musicPlaying 2s infinite;
+}
+
+
+
+
 @keyframes unblur {
-    0% {
-        filter: blur(20px);
-        opacity: 0;
-    }
-    100% {
-        filter: blur(0);
-        opacity: 1;
-    }
+  from {
+      filter: blur(20px);
+      opacity: 0;
+  }
+  to {
+      filter: blur(0);
+      opacity: 1;
+  }
 }
 
 @keyframes fadeIn {
-  0% {
+  from {
       opacity: 0;
   }
-  100% {
+  to {
       opacity: 1;
   }
+}
+
+/* Apply animations with better performance */
+.image-track-container,
+.image-track,
+.image-item {
+  will-change: opacity, filter;
+  animation: unblur 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+body {
+  animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }

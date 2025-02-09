@@ -80,6 +80,94 @@
     </div>
     <!-- Link to JavaScript file -->
     <script src="script.js"></script>
+
+    
+
+    <audio id="bgMusic" loop autoplay>
+        <source src="Assets/spotifydown.com - weathergirl - FLAVOR FOLEY.mp3" type="audio/mpeg">
+    </audio>
+    
+    <div class="audio-controls" role="group" aria-label="Audio controls">
+        <!-- Music Toggle Button -->
+        <button 
+            id="musicToggle"
+            class="audio-toggle"
+            aria-label="Toggle music"
+            aria-pressed="false"
+        >
+            <span class="icon-wrapper">
+                <svg 
+                    class="volume-icon" 
+                    width="24" 
+                    height="24" 
+                    viewBox="0 0 48 48" 
+                    aria-hidden="true"
+                >
+                    <defs>
+                        <!-- Base volume mask -->
+                        <mask id="volume-mask">
+                            <path 
+                                fill="none" 
+                                stroke="#fff" 
+                                stroke-width="4"
+                                stroke-linejoin="round"
+                                d="M24 6v36c-7 0-12.201-9.16-12.201-9.16H6a2 2 0 0 1-2-2V17.01a2 2 0 0 1 2-2h5.799S17 6 24 6Z"
+                            />
+                            <!-- Volume wave lines -->
+                            <path 
+                                class="volume-waves"
+                                fill="none"
+                                stroke="#fff" 
+                                stroke-width="4"
+                                stroke-linecap="round"
+                                d="M32 15a11.91 11.91 0 0 1 1.684 1.859A12.07 12.07 0 0 1 36 24c0 2.654-.846 5.107-2.278 7.09A11.936 11.936 0 0 1 32 33
+                                M34.236 41.186C40.084 37.696 44 31.305 44 24c0-7.192-3.796-13.496-9.493-17.02"
+                            />
+                            <!-- Mute X line (visible when muted) -->
+                            <path 
+                                class="mute-x"
+                                fill="none"
+                                stroke="#fff" 
+                                stroke-width="4"
+                                stroke-linecap="round"
+                                d="M38 20L32 26M32 20L38 26"
+                            />
+                        </mask>
+                    </defs>
+                    <rect 
+                        width="48" 
+                        height="48" 
+                        fill="currentColor" 
+                        mask="url(#volume-mask)"
+                    />
+                </svg>
+            </span>
+        </button>
+    
+        <!-- Volume Slider -->
+        <div 
+            class="volume-slider-container"
+            role="group" 
+            aria-label="Volume control"
+        >
+            <input 
+                type="range"
+                id="volumeSlider"
+                class="volume-slider"
+                min="0"
+                max="0.20"
+                step="0.001"
+                value="0.10"
+                aria-label="Adjust volume"
+            />
+        </div>
+    </div>
+
+    <div class="email-icon">
+        <a href="mailto:hyperiya.vcz@outlook.com" aria-label="Send email">
+            <div class="icon-mask"></div>
+        </a>
+    </div>
     
 </body>
 </html>

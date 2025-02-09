@@ -1,5 +1,25 @@
 const track = document.querySelector(".image-track");
 const images = track.getElementsByTagName("img");
+
+let trackMoved = false;
+let startX = 0;
+
+const volumeSlider = document.getElementById('volumeSlider');
+
+function isVolumeControl(e) {
+    const volumeControls = document.querySelector('.audio-controls'); // Add this class to your volume controls container
+    const rect = volumeControls.getBoundingClientRect();
+    const x = e.clientX || (e.touches && e.touches[0].clientX);
+    const y = e.clientY || (e.touches && e.touches[0].clientY);
+    
+    return x >= rect.left && 
+           x <= rect.right && 
+           y >= rect.top && 
+           y <= rect.bottom;
+}
+
+
+
 // Profile
 
 // IMAGE TRACK
@@ -15,14 +35,18 @@ for(const image of images) {
 }
 
 window.onmousedown = e => {
+    if (isVolumeControl(e)) return;
     track.dataset.mouseDownAt = e.clientX;
     track.setAttribute('data-dragging', 'true');
+    startX = e.clientX;
+    trackMoved = false; // Reset the movement flag
 }
 
 window.onmouseup = () => {
     track.dataset.mouseDownAt = "0";
     track.dataset.prevPercentage = track.dataset.percentage;
-    track.setAttribute('data-dragging', 'false');  
+    track.setAttribute('data-dragging', 'false'); 
+    // Dont reset trackmoved here 
 }
 
 // Add this function to recalculate dimensions
@@ -45,6 +69,10 @@ window.addEventListener('resize', updateTrackDimensions);
 window.onmousemove = e => {
     if(track.dataset.mouseDownAt === "0") return;
 
+    // Check if the track has moved more than a small threshold (e.g., 5 pixels)
+    if(Math.abs(e.clientX - startX) > 5) {
+        trackMoved = true;
+    }
     
 
     const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX;
@@ -74,7 +102,9 @@ window.onmousemove = e => {
 }
 
 window.ontouchstart = e => {
+    if (isVolumeControl(e)) return;
     track.dataset.mouseDownAt = e.touches[0].clientX;
+    trackMoved = false;
 }
 
 window.ontouchend = () => {
@@ -84,6 +114,10 @@ window.ontouchend = () => {
 
 window.ontouchmove = e => {
     if(track.dataset.mouseDownAt === "0") return;
+
+    if(Math.abs(e.touches[0].clientX - startX) > 5) {
+        trackMoved = true;
+    }
 
     const touchDelta = parseFloat(track.dataset.mouseDownAt) - e.touches[0].clientX;
     const maxDelta = window.innerWidth / 2;
@@ -153,3 +187,66 @@ document.addEventListener('keydown', function(e) {
 document.addEventListener('wheel', function(e) {
   e.preventDefault();
 }, { passive: false });
+
+// Prevent link pressing when moving track
+
+document.querySelectorAll('.image-item a').forEach(link => {
+    link.addEventListener('click', (e) => {
+        if(trackMoved) {
+            e.preventDefault();
+            trackMoved = false; // Reset for next interaction
+        }
+    });
+});
+
+document.querySelectorAll('.image-item a').forEach(link => {
+    link.addEventListener('touchend', (e) => {
+        if(trackMoved) {
+            e.preventDefault();
+            trackMoved = false;
+        }
+    });
+});
+
+
+
+// Music
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const music = document.getElementById('bgMusic');
+    const audioButton = document.querySelector('.audio-toggle');
+    const volumeSlider = document.getElementById('volumeSlider');
+
+    let isMuted = false;
+    music.volume = volumeSlider.value;
+    
+    audioButton.addEventListener('click', () => {
+        
+        isMuted = !isMuted;
+        if (isMuted) {
+            preMute = music.volume;
+            volumeSlider.value = 0;
+            music.volume = 0;
+        } else { 
+            volumeSlider.value = preMute;
+            music.volume = preMute;
+        }
+        audioButton.setAttribute('data-muted', isMuted);
+        audioButton.setAttribute('aria-label', isMuted ? 'Unmute' : 'Mute');
+    });
+    
+    volumeSlider.addEventListener('input', function(e) {
+        e.stopPropagation();
+        music.volume = this.value;
+        value = this.value * 100;
+        this.style.setProperty('--volume-percentage', `${value}%`);
+        e.stopPropagation();
+        trackMoved = false;
+    });
+
+    volumeSlider.style.setProperty('--volume-percentage', `${volumeSlider.value*100}%`);
+});
+
+
+
