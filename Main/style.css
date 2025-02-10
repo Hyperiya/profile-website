@@ -230,6 +230,54 @@ body {
 
 /* Music */
 
+.audio-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px; /* Space between controls and text */
+  position: fixed; /* Keep your existing positioning */
+  top: 0px;
+  left: 0px;
+}
+
+/* Controls */
+.audio-controls {
+  position: relative;
+  top: 20px;
+  left: 20px;
+
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+  background: rgba(18, 18, 18, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  padding: 12px;
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+
+  width: 40px;
+  height: 40px;
+}
+
+.audio-controls:hover {
+  background: rgba(24, 24, 24, 0.95);
+  transform: scale(1.02);
+}
+
+.audio-controls:hover {
+  width: auto;
+  border-radius: 50px;
+  background: rgba(24, 24, 24, 0.95);
+  padding: 12px 16px;
+  transform: scale(1.02);
+}
+
 /* Music Toggle Button */
 #musicToggle {
   background: none;
@@ -281,44 +329,6 @@ body {
   opacity: 0.8;
 }
 
-/* Controls */
-.audio-controls {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-
-  z-index: 1000;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  gap: 12px;
-  background: rgba(18, 18, 18, 0.8);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-
-  padding: 12px;
-  border-radius: 50%;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-
-  width: 40px;
-  height: 40px;
-}
-
-.audio-controls:hover {
-  background: rgba(24, 24, 24, 0.95);
-  transform: scale(1.02);
-}
-
-.audio-controls:hover {
-  width: auto;
-  border-radius: 50px;
-  background: rgba(24, 24, 24, 0.95);
-  padding: 12px 16px;
-  transform: scale(1.02);
-}
 
 /* Volume Slider Container */
 .volume-slider-container {
@@ -330,12 +340,13 @@ body {
 }
 
 .audio-controls:hover .volume-slider-container {
-  width: 100px;
-  margin-left: 8px;
+  width: 200px;
+  
 }
 
 /* Volume Slider */
 #volumeSlider {
+  overflow: visible;
   appearance: none;
   -webkit-appearance: none;
   width: 100%;
@@ -370,6 +381,7 @@ body {
 /* Slider Thumb */
 #volumeSlider::-webkit-slider-thumb {
   -webkit-appearance: none;
+  overflow: visible;
   width: 12px;
   height: 12px;
   background: white;
@@ -377,6 +389,7 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  transform: translate(0%, -30%);
 }
 
 #volumeSlider::-moz-range-thumb {
@@ -392,7 +405,7 @@ body {
 
 /* Hover effects for slider thumb */
 #volumeSlider::-webkit-slider-thumb:hover {
-  transform: scale(1.2);
+  transform: scale(1.2) translate(0%, -30%);
   background: #ffffff;
 }
 
@@ -403,7 +416,7 @@ body {
 
 /* Active state for slider */
 #volumeSlider:active::-webkit-slider-thumb {
-  transform: scale(0.95);
+  transform: scale(0.95) translate(0%, -30%);
 }
 
 #volumeSlider:active::-moz-range-thumb {
@@ -413,6 +426,35 @@ body {
 /* Track hover effect */
 #volumeSlider:hover {
   background: rgba(255, 255, 255, 0.3);
+}
+
+/* Text */
+
+.song-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: inherit;
+  pointer-events: none;
+  transform: translateY(16px) translateX(10px)
+}
+
+.time {
+  transform: translateX(-2px);
+  color: #ffffff;
+  font-size: 4.5vh;
+  white-space: nowrap;
+  margin-bottom: 0px; /* Space between top and bottom text */
+  font-family: 'Odin';
+  font-weight: 1000;
+}
+
+.song-text {
+  color: #ffffff;
+  font-size: 1.25vh; /* Slightly smaller for artist name */
+  white-space: nowrap;
+  opacity: 0.8; /* Slightly more subtle */
+  font-family: 'OdinLight';
 }
 
 /* Optional: Animation for when music is playing */
@@ -426,7 +468,19 @@ body {
   animation: musicPlaying 2s infinite;
 }
 
+@font-face {
+  font-family: 'Odin'; /* Name you'll use to reference this font */
+  src: url('Assets/odin-rounded.regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
 
+@font-face {
+  font-family: 'OdinLight'; /* Name you'll use to reference this font */
+  src: url('Assets/odin-rounded.light.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
 
 
 @keyframes unblur {

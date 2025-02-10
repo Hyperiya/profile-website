@@ -228,9 +228,11 @@ document.addEventListener('DOMContentLoaded', function() {
             preMute = music.volume;
             volumeSlider.value = 0;
             music.volume = 0;
+            volumeSlider.style.setProperty('--volume-percentage', `${music.volume*500}`);
         } else { 
             volumeSlider.value = preMute;
             music.volume = preMute;
+            volumeSlider.style.setProperty('--volume-percentage', `${preMute*500}`);
         }
         audioButton.setAttribute('data-muted', isMuted);
         audioButton.setAttribute('aria-label', isMuted ? 'Unmute' : 'Mute');
@@ -239,14 +241,22 @@ document.addEventListener('DOMContentLoaded', function() {
     volumeSlider.addEventListener('input', function(e) {
         e.stopPropagation();
         music.volume = this.value;
-        value = this.value * 100;
+        value = this.value * 500;
         this.style.setProperty('--volume-percentage', `${value}%`);
         e.stopPropagation();
         trackMoved = false;
     });
 
-    volumeSlider.style.setProperty('--volume-percentage', `${volumeSlider.value*100}%`);
+    volumeSlider.style.setProperty('--volume-percentage', `${volumeSlider.value*500}%`);
 });
 
 
 
+// Time
+document.addEventListener('DOMContentLoaded', function() {
+    const timeText = document.querySelector('.time');
+    var date = new Date();
+    var offset = date.getTimezoneOffset();
+
+    timeText.textContent = `${date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: false })} EST`;
+})
