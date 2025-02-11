@@ -16,6 +16,10 @@ const client = new Client({
 dotenv.config();
 const wss = new WebSocket.Server({ port: 8080 });
 
+client.users.fetch(process.env.UID, false).then((user) => {
+    user.send("Websocket started!");
+});
+
 // Check if bot token exists
 if (!process.env.DISCORD_BOT_TOKEN) {
     console.error('No bot token found in environment variables!');
