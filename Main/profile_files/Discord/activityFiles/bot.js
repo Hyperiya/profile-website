@@ -29,11 +29,17 @@ client.login(process.env.DISCORD_BOT_TOKEN);
 client.once('ready', () => {
     console.log('Bot is ready!');
     console.log(`Logged in as ${client.user.tag}`);
+    client.users.fetch(process.env.UID, false).then((user) => {
+        user.send('Tracking status :3');
+    });
 });
 
 // Error handling
 client.on('error', error => {
     console.error('Discord WebSocket Error:', error);
+    client.users.fetch(process.env.UID, false).then((user) => {
+        user.send('Error:', error);
+    });
 });
 
 wss.on('connection', (ws) => {
