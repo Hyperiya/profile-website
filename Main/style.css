@@ -67,6 +67,19 @@ body {
   background-color: #cccccc;
 }
 
+.left-text {
+  color: white;
+  font-size: 5vh;
+  padding-right: 20px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap; /* Prevents text from wrapping */
+  position: relative;
+  z-index: 1;
+  font-family: 'Odin';
+  white-space: pre-line;
+  text-align: center;
+}
 
 
 /* Image Track */
@@ -81,6 +94,7 @@ body {
 
 .image-track {
   display: flex;
+  align-items: center;
   cursor: default;
   user-select: none;
   -webkit-user-select: none;

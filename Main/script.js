@@ -25,13 +25,13 @@ function isVolumeControl(e) {
 // IMAGE TRACK
 // Initiate Variables
 track.dataset.mouseDownAt = "0";
-track.dataset.prevPercentage = "50";
+track.dataset.prevPercentage = "38";
 track.dataset.percentage = "0";
 
-track.style.transform = "translate(50%, 0%)";
+track.style.transform = "translate(38%, 0%)";
 // Also set initial object position for images
 for(const image of images) {
-    image.style.objectPosition = "75% center";
+    image.style.objectPosition = "70% center";
 }
 
 window.onmousedown = e => {
@@ -81,7 +81,7 @@ window.onmousemove = e => {
     const percentage = (mouseDelta / maxDelta) * -100;
     const nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage;
 
-    const nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 50), -75);
+    const nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 38), -75);
 
     track.dataset.percentage = nextPercentage;
 
