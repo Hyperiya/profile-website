@@ -253,10 +253,85 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 // Time
+
 document.addEventListener('DOMContentLoaded', function() {
     const timeText = document.querySelector('.time');
-    var date = new Date();
-    var offset = date.getTimezoneOffset();
+    
+    function updateTime() {
+        /* Create a date object in EST/EDT */
+        const options = {
+            timeZone: 'America/New_York',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: false
+        };
+        
+        const estTime = new Date().toLocaleTimeString('en-US', options);
+        timeText.textContent = `${estTime} EST`;
+    }
 
-    timeText.textContent = `${date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: false })} EST`;
-})
+    /* Update immediately */
+    updateTime();
+    
+    /* Update every second */
+    setInterval(updateTime, 1000);
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const infoIcon = document.querySelector('.info-icon');
+    const popup = document.getElementById('infoPopup');
+    const closeButton = popup.querySelector('.close-button');
+    const artistsText = document.querySelector('.artists-button-text');
+    const artistsDetails = document.querySelector('.artists-details');
+
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'popup-overlay';
+    document.body.appendChild(overlay);
+
+    function showPopup() {
+        overlay.style.display = 'block';
+        popup.style.display = 'block';
+        
+        // Trigger animations
+        requestAnimationFrame(() => {
+            overlay.style.animation = 'overlayFadeIn 0.3s forwards';
+            popup.style.animation = 'boxFadeIn 0.3s forwards';
+        });
+    }
+
+    function hidePopup() {
+        overlay.style.animation = 'overlayFadeOut 0.3s forwards';
+        popup.style.animation = 'boxFadeOut 0.3s forwards';
+        
+        // Remove elements after animation
+        setTimeout(() => {
+            overlay.style.display = 'none';
+            popup.style.display = 'none';
+        }, 300);
+    }
+
+    function toggleArtists() {
+        if (artistsDetails.style.display === 'none' || !artistsDetails.style.display) {
+            artistsDetails.style.display = 'block';
+            artistsDetails.style.animation = 'boxFadeInNT 0.3s forwards';
+        } else {
+            artistsDetails.style.animation = 'boxFadeOutNT 0.3s forwards';
+            setTimeout(() => {
+                artistsDetails.style.display = 'none';
+            }, 300);
+        }
+    }
+
+    // Event listeners
+    infoIcon.addEventListener('click', showPopup);
+    closeButton.addEventListener('click', hidePopup);
+    overlay.addEventListener('click', hidePopup);
+    artistsText.addEventListener('click', toggleArtists);
+
+    // Prevent popup from closing when clicking inside it
+    popup.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+});
+
