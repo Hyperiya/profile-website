@@ -282,17 +282,19 @@ body {
 }
 
 .audio-controls:hover {
-  background: rgba(24, 24, 24, 0.95);
-  transform: scale(1.02);
-}
-
-.audio-controls:hover {
   width: auto;
   border-radius: 50px;
   background: rgba(24, 24, 24, 0.95);
   padding: 12px 16px;
   transform: scale(1.02);
+  transition: all 0.3s ease;
 }
+
+.audio-controls:not(:hover){
+  width: 40px;
+  transition: all 0.3s ease;
+}
+
 
 /* Music Toggle Button */
 #musicToggle {
@@ -324,7 +326,6 @@ body {
 #musicToggle:active {
   transform: translate(25%, 0%) scale(0.95);
 }
-
 
 /* Default state - showing volume */
 .volume-waves {
@@ -359,9 +360,25 @@ body {
 }
 
 .audio-controls:hover .volume-slider-container {
-  width: 200px;
-  
+  width: 200px; 
 }
+
+.audio-controls:hover #volumeSlider::-webkit-slider-thumb{
+  display: block;
+}
+
+.audio-controls:not(:hover) #volumeSlider::-webkit-slider-thumb{
+  display: none;
+}
+
+.audio-controls:hover #volumeSlider::-moz-range-thumb{
+  display: block;
+}
+
+.audio-controls:not(:hover) #volumeSlider::-moz-range-thumb{
+  display: none;
+}
+
 
 /* Volume Slider */
 #volumeSlider {
