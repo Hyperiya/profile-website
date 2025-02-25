@@ -335,3 +335,24 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// Fuck mobile users <3
+document.addEventListener('DOMContentLoaded', function(){
+    const antiMobile = document.querySelector('.anti-mobile');
+    const infoIcon = document.querySelector('.info-icon');
+    const emailIcon = document.querySelector('.email-icon');
+    
+
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+        // true for mobile device
+        console.log("Mobile -- Skipping")
+        antiMobile.style.display = 'block';
+        infoIcon.style.display = 'none';
+        emailIcon.style.display = 'none';
+      } else {
+        console.log("Desktop/PC");
+        // antiMobile.style.display = 'block';
+        // infoIcon.style.display = 'none';
+        // emailIcon.style.display = 'none';
+        return;
+    }
+}); 

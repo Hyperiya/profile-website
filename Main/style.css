@@ -114,7 +114,7 @@ body {
 }
 
 .image-item img {
-  /* filter: brightness(5%); */
+  filter: brightness(1%); 
   width: 20vw;
   height: 70vh;
   object-fit: cover;
@@ -314,6 +314,9 @@ body {
 }
 
 #musicToggle:hover {
+  aspect-ratio: 1/1;
+  width: auto;
+  height: auto;
   transform: translate(25%, 0%) scale(1.15);
   background-color: rgba(255, 255, 255, 0.1);
 }
@@ -698,4 +701,31 @@ body {
 @keyframes overlayFadeOut {
   from { opacity: 1; }
   to { opacity: 0; }
+}
+
+/* Anti-Mobile */
+.anti-mobile{
+  display: none;
+  user-select: none;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-color: #111212;
+  color: #111212;
+  z-index: 100000;
+}
+
+.anti-mobile h1{
+  font-family: Odin;
+  position: absolute;
+  font-size: 2rem;
+  background-color: transparent;
+  color: #ffffff;
+  z-index: 10;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
