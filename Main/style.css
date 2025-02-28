@@ -39,7 +39,7 @@ body {
   position: fixed;
   bottom: 20px;
   left: 20px;
-  z-index: 1000;
+  z-index: 100;
 }
 
 .icon-mask {
@@ -114,7 +114,7 @@ body {
 }
 
 .image-item img {
-  filter: brightness(1%); 
+  filter: brightness(100%); 
   width: 20vw;
   height: 70vh;
   object-fit: cover;
@@ -557,7 +557,7 @@ body {
   position: fixed;
   bottom: 20px;
   left: 70px;
-  z-index: 1000;
+  z-index: 100;
 }
 
 .info-mask {
@@ -720,7 +720,7 @@ body {
 }
 
 /* Anti-Mobile */
-.anti-mobile{
+.anti-mobile {
   display: none;
   user-select: none;
   position: fixed;
@@ -731,7 +731,7 @@ body {
   z-index: 100000;
 }
 
-.anti-mobile h1{
+.anti-mobile h1 {
   font-family: Odin;
   position: absolute;
   font-size: 2rem;
@@ -744,4 +744,53 @@ body {
   justify-content: center;
   align-items: center;
   text-align: center;
+}
+
+.enter-page {
+  display: block;
+  user-select: none;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(1, 2, 2, 0.75);
+  z-index: 1000;
+  backdrop-filter: blur(30px);
+}
+
+.enter-page h1 {
+  font-family: Odin;
+  position: absolute;
+  font-size: 2rem;
+  background-color: transparent;
+  color: #ffffff;
+  z-index: 10;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* Progress Bar */
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #232627;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-bar {
+  max-width: 90%;
+  width: 0%;
+  height: 10px;
+  background-color: #ff4163;
+  transition: width 0.3s ease;
+  border-radius: 5vh;
 }

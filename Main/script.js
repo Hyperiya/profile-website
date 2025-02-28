@@ -1,6 +1,7 @@
 const track = document.querySelector(".image-track");
 const images = track.getElementsByTagName("img");
 
+
 let trackMoved = false;
 let startX = 0;
 
@@ -26,7 +27,7 @@ function isVolumeControl(e) {
 // Initiate Variables
 track.dataset.mouseDownAt = "0";
 track.dataset.prevPercentage = "38";
-track.dataset.percentage = "0";
+track.dataset.percentage = "38";
 
 track.style.transform = "translate(38%, 0%)";
 // Also set initial object position for images
@@ -52,13 +53,13 @@ window.onmouseup = () => {
 // Add this function to recalculate dimensions
 function updateTrackDimensions() {
     // Reset the track position
-    track.dataset.prevPercentage = "50";
-    track.dataset.percentage = "0";
-    track.style.transform = "translate(50%, 0%)";
+    track.dataset.prevPercentage = "38";
+    track.dataset.percentage = "38";
+    track.style.transform = "translate(38%, 0%)";
     
     // Reset image positions
     for(const image of images) {
-        image.style.objectPosition = "75% center";
+        image.style.objectPosition = "70% center";
     }
 }
 
@@ -335,14 +336,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Fuck mobile users <3
+// Fuck mobile users <3 (& enter page is here)
 document.addEventListener('DOMContentLoaded', function(){
+    const music = document.getElementById('bgMusic');
     const antiMobile = document.querySelector('.anti-mobile');
     const infoIcon = document.querySelector('.info-icon');
     const emailIcon = document.querySelector('.email-icon');
-    
+    const enterPage = document.querySelector('.enter-page')
 
-    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) /*|| true*/){
         // true for mobile device
         console.log("Mobile -- Skipping")
         antiMobile.style.display = 'block';
@@ -350,9 +352,38 @@ document.addEventListener('DOMContentLoaded', function(){
         emailIcon.style.display = 'none';
       } else {
         console.log("Desktop/PC");
-        // antiMobile.style.display = 'block';
-        // infoIcon.style.display = 'none';
-        // emailIcon.style.display = 'none';
+        enterPage.addEventListener('click', () => {
+            infoIcon.style.display = 'block';
+            emailIcon.style.display = 'block';
+            enterPage.style.animation = 'boxFadeOutNT 0.6s forwards'
+            
+            music.play();
+            
+            setTimeout(() => {
+                enterPage.style.display = 'none';
+            }, 600);
+        });
         return;
     }
 }); 
+
+window.addEventListener('load', function() {
+    const loadingScreen = document.querySelector('.loading-screen');
+    const progressBar = document.getElementById('progressBar');
+    
+    // Simulate loading progress
+    let progress = 0;
+    const interval = setInterval(function() {
+      progress += 10;
+      progressBar.style.width = progress + '%';
+      
+      if (progress >= 90) {
+        clearInterval(interval);
+        loadingScreen.style.animation = 'boxFadeOutNT 0.4s forwards'
+        setTimeout(() => {
+            loadingScreen.style.display = 'none';
+        }, 450); 
+      }
+    }, 200);
+});
+  

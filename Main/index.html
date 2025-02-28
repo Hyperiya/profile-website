@@ -4,15 +4,24 @@
     <title>Profile Website</title>
     <!-- Link to CSS file -->
     <link rel="stylesheet" type="text/css" href="style.css", ><link rel="stylesheet" href="Sakura/sakura.css">
-    </head>
+</head>
 
 
 <body>
     <script src="Sakura/sakura.js"></script>
-    <script>var sakura = new Sakura('body');</script> 
-    <div class="anti-mobile">
-        <h1>Hi- Sorry, this page doesn't support mobile, go <a href="https://guns.lol/hyperiya">here</a> instead</h1>
-    </div>
+    <script>var sakura = new Sakura('body');</script>
+    <div class="full-page-covers">
+        <div class="anti-mobile">
+            <h1>Hi- Sorry, this page doesn't support mobile, go <a href="https://guns.lol/hyperiya">here</a> instead</h1>
+        </div>
+        <div class="enter-page">
+            <h1>click to enter...</h1>
+        </div>
+        <div class="loading-screen">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>          
+    </div> 
+    
     <div class="image-track-container">
         <div class="image-track">
             <div class="left-text">Hyperiya's 
@@ -86,7 +95,7 @@
     <!-- Link to JavaScript file -->
     <script src="script.js"></script>
 
-    <audio id="bgMusic" loop autoplay>
+    <audio id="bgMusic" loop>
         <source src="Assets/spotifydown.com - weathergirl - FLAVOR FOLEY.mp3" type="audio/mpeg">
     </audio>
 
@@ -205,6 +214,5 @@
             <button class="close-button">×</button>
         </div>
     </div>
-    
 </body>
 </html>
