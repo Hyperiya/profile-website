@@ -1,6 +1,8 @@
 const track = document.querySelector(".image-track");
 const images = track.getElementsByTagName("img");
 
+// Var to prevent dragging while not entered    
+let entered = false;
 
 let trackMoved = false;
 let startX = 0;
@@ -36,7 +38,7 @@ for(const image of images) {
 }
 
 window.onmousedown = e => {
-    if (isVolumeControl(e)) return;
+    if (isVolumeControl(e) || !entered) return;
     track.dataset.mouseDownAt = e.clientX;
     track.setAttribute('data-dragging', 'true');
     startX = e.clientX;
@@ -82,7 +84,7 @@ window.onmousemove = e => {
     const percentage = (mouseDelta / maxDelta) * -100;
     const nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage;
 
-    const nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 38), -75);
+    const nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 40), -75);
 
     track.dataset.percentage = nextPercentage;
 
@@ -344,7 +346,7 @@ document.addEventListener('DOMContentLoaded', function(){
     const emailIcon = document.querySelector('.email-icon');
     const enterPage = document.querySelector('.enter-page')
 
-    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) /*|| true*/){
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
         // true for mobile device
         console.log("Mobile -- Skipping")
         antiMobile.style.display = 'block';
@@ -357,6 +359,7 @@ document.addEventListener('DOMContentLoaded', function(){
             emailIcon.style.display = 'block';
             enterPage.style.animation = 'boxFadeOutNT 0.6s forwards'
             
+            entered=true
             music.play();
             
             setTimeout(() => {
@@ -371,19 +374,42 @@ window.addEventListener('load', function() {
     const loadingScreen = document.querySelector('.loading-screen');
     const progressBar = document.getElementById('progressBar');
     
-    // Simulate loading progress
+    // Set up the back-and-forth animation
     let progress = 0;
+    let direction = 1; // 1 for right, -1 for left
+    let cycles = 0;
+    const maxCycles = 2; // Number of full cycles before completing
+    
     const interval = setInterval(function() {
-      progress += 10;
+      progress += 5 * direction;
+      
+      // Change direction when reaching edges
+      if (progress >= 100) {
+        direction = -1;
+        cycles += 0.5; // Count half cycle
+      } else if (progress <= 0) {
+        direction = 1;
+        cycles += 0.5; // Count half cycle
+      }
+      
+      // Update the progress bar width
       progressBar.style.width = progress + '%';
       
-      if (progress >= 90) {
+      // Once we've completed the desired number of cycles, finish loading
+      if (cycles >= maxCycles) {
         clearInterval(interval);
-        loadingScreen.style.animation = 'boxFadeOutNT 0.4s forwards'
+        
+        // Final fill to 100%
+        progressBar.style.transition = 'width 0.3s ease-in';
+        progressBar.style.width = '100%';
+        
+        // Fade out the loading screen
         setTimeout(() => {
-            loadingScreen.style.display = 'none';
-        }, 450); 
+          loadingScreen.style.animation = 'boxFadeOutNT 0.4s forwards';
+          setTimeout(() => {
+              loadingScreen.style.display = 'none';
+          }, 450);
+        }, 300);
       }
-    }, 200);
+    }, 50);
 });
-  

@@ -114,7 +114,7 @@ body {
 }
 
 .image-item img {
-  filter: brightness(100%); 
+  filter: brightness(0%); 
   width: 20vw;
   height: 70vh;
   object-fit: cover;
