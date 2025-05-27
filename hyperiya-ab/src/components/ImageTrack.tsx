@@ -116,7 +116,7 @@ const ImageTrack: React.FC<ImageTrackProps> = ({ title = "Hyperiya's Profiles" }
 
     useEffect(() => {
         animateTrack((initPosition), true)
-    }, [])
+    }, [initPosition, animateTrack])
 
     // Function to update track dimensions on resize (unchanged)
     const updateTrackDimensions = useCallback(() => {
@@ -134,7 +134,7 @@ const ImageTrack: React.FC<ImageTrackProps> = ({ title = "Hyperiya's Profiles" }
         for (const image of Array.from(images)) {
             image.style.objectPosition = "75% center";
         }
-    }, []);
+    }, [initPosition]);
 
     // Handle link clicks
     const handleLinkClick = useCallback((e: React.MouseEvent, item: ProfileItem) => {
@@ -151,7 +151,6 @@ const ImageTrack: React.FC<ImageTrackProps> = ({ title = "Hyperiya's Profiles" }
         if (!trackRef.current) return;
 
         const track = trackRef.current;
-        const images = track.getElementsByTagName("img");
 
         // Set initial values
         track.style.transform = `translate(${initPosition}%, 0%)`;

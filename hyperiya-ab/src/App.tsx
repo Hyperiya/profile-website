@@ -1,5 +1,5 @@
 // src/App.tsx
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import ImageTrack from './components/ImageTrack'
 import AudioPlayer from './components/AudioPlayer'
 import LoadingScreen from './components/LoadingScreen'
@@ -10,16 +10,13 @@ import './App.css'
 
 function App() {
   const [showPopup, setShowPopup] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
 
-  const handleLoadingComplete = () => {
-    setIsLoading(false);
-  }
+
 
 
   return (
     <>
-      <LoadingScreen onComplete={handleLoadingComplete} />
+      <LoadingScreen />
       <Sakura />
       <div className='hyperiya-ab-container'>
         <div className='image-track-container'>

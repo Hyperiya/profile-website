@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 declare global {
   interface Window {
-    Sakura: new (selector: string, options?: any) => {
+    Sakura: new (selector: string, options?: unknown) => {
       stop?: () => void;
     };
   }
@@ -20,9 +20,8 @@ export function Sakura() {
     // Initialize Sakura after script loads
     script.onload = () => {
       if (window.Sakura) {
-        const sakura = new window.Sakura('.hyperiya-ab-container', {
+        new window.Sakura('.hyperiya-ab-container', {
           className: 'sakura',
-          
         });
       }
     };

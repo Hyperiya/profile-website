@@ -2,11 +2,9 @@
 import { useState, useEffect } from 'react';
 import './LoadingScreen.css';
 
-interface LoadingScreenProps {
-    onComplete: () => void;
-}
 
-const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
+
+const LoadingScreen: React.FC = () => {
     const [progress, setProgress] = useState(0);
     const [loading, setLoading] = useState(true);
     const [showEnter, setShowEnter] = useState(false);
@@ -34,16 +32,12 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
     const handleEnterClick = () => {
         // Fade out animation
         const enterPage = document.querySelector('.enter-page');
-        let weathergirl: HTMLMediaElement | null = document.querySelector('.weathergirl')
+        const weathergirl: HTMLMediaElement | null = document.querySelector('.weathergirl')
         weathergirl!.play()
         if (enterPage) {
             enterPage.classList.add('fade-out');
-            setTimeout(() => {
-                onComplete();
-            }, 500);
-        } else {
-            onComplete();
-        }
+            
+        };
     };
 
     if (!loading && !showEnter) return null;
