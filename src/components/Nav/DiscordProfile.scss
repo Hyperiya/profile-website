@@ -1,0 +1,85 @@
+.root {
+  width: 300px;
+  height: auto;
+  opacity: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #242429;
+}
+
+.banner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 80px;
+  object-fit: cover;
+  overflow: hidden;
+}
+
+.pfp {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+}
+
+.avatar {
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+}
+
+.username {
+  font-size: 18px;
+  margin: 0 0 4px 0;
+  font-family: 'SansGG';
+  color: white;
+}
+
+
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 12px;
+}
+
+
+.activity {
+  word-wrap: unset;
+  color: #8a94a9;
+  position: relative;
+  font-size: 14px;
+  width: auto;
+  left: 0;
+  bottom: 0;
+  font-family: 'SansGG';
+}
+
+.avatarOnline {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  border-radius: 100%;
+  box-shadow:
+    0 0 0 3px #2b2d31,
+    inset 0 0 0 3px #2b2d31;
+}
+
+.profile {
+  background-color: #242429;
+  color: var(--foreground-color);
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 16px;
+  overflow: hidden;
+  outline: #1d1d20 solid 1px;
+
+  &:hover {
+    background-color: hsl(240, 6%, 20%);
+  }
+}

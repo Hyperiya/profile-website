@@ -1,0 +1,205 @@
+.navbar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80px;
+    height: 100dvh;
+    padding: 1rem 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    box-sizing: border-box;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    justify-content: flex-start;
+}
+
+.spacer {
+    flex-grow: 1;
+}
+
+.bottom-item {
+    margin-bottom: 20px;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+}
+
+.email-item {
+    a {
+        padding: 0 1.7rem;
+        margin-bottom: -1rem;
+        color: white;
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: all 0.3s ease;
+        flex-grow: 1;
+        // Take up remaining space
+        justify-content: center;
+
+        &:hover {
+            .nav-icon {
+                opacity: 1;
+            }
+
+            .nav-label {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+.nav-item {
+    .nav-link {
+        color: white;
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+}
+
+.discord-link {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  display: block;
+  
+  &:hover {
+    .root {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+  }
+}
+
+.profile-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    width: 100%;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 100%;
+        width: 20px;
+        /* Width of the bridge */
+        height: 100%;
+        background-color: transparent;
+    }
+
+    &:hover {
+        pointer-events: auto;
+    }
+
+    .discord-profile-popup {
+        position: absolute;
+        left: 90px;
+        top: 10px;
+        z-index: 1000;
+        width: 300px;
+        animation: fadeIn 0.2s ease-in-out;
+        transform-origin: left center;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+}
+
+.navbar-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.navbar-username {
+    user-select: none;
+    color: white;
+    font-family: OdinLight;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+.navigation {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    flex-grow: 0;
+    // Take up remaining space
+    justify-content: center;
+
+    li {
+        margin: 1rem 0;
+        display: flex;
+        justify-content: center;
+    }
+
+    a {
+        color: white;
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: all 0.3s ease;
+        flex-grow: 1;
+        // Take up remaining space
+        justify-content: center;
+
+        &:hover {
+            .nav-icon {
+                opacity: 1;
+            }
+
+            .nav-label {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+.nav-icon {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 5px;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.nav-label {
+    color: white;
+    user-select: none;
+    font-size: 0.7rem;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+    font-family: OdinLight;
+}
+
+.navbar-divider {
+    width: 60%;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin: 1rem auto;
+}

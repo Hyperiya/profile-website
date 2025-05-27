@@ -1,0 +1,56 @@
+:root {
+  --discord-color: #525dea;
+  --gamebanana-color: #c39313;
+  --patreon-color: #f86c59;
+  --steam-color: #0a2668;
+  --github-color: #2a7aef;
+  --pinterest-color: #e60023;
+  /* background-color: #232627; */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #232627;
+}
+
+#root {
+  height: 100vh;
+  width: 100vw;
+  background-color: #232627;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transform-origin: center top;
+}
+
+
+@font-face {
+  font-family: 'Odin';
+  src: url('/fonts/odin-rounded.regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'OdinLight';
+  src: url('/fonts/odin-rounded.light.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SansGG';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/fonts/gg-sans-Regular.otf') format("opentype");
+}

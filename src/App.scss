@@ -1,0 +1,17 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  display: flex;
+}
+
+.content-wrapper {
+  margin-left: 80px;
+  width: calc(100% - 80px);
+  min-height: 100vh;
+}
+
+
+
