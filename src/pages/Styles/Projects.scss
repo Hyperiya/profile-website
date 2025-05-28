@@ -1,0 +1,132 @@
+// src/pages/Projects.scss
+.projects-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    h1 {
+        font-family: 'Odin', sans-serif;
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        color: white;
+    }
+
+    .projects-subtitle {
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 2rem;
+        font-family: 'OdinLight', sans-serif;
+    }
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.project-card {
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 1.5rem;
+    color: white;
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .project-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+
+        h2 {
+            font-family: 'Odin', sans-serif;
+            font-size: 1.25rem;
+            margin: 0;
+            margin-right: auto;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .language-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        .language-name {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            font-family: 'OdinLight', sans-serif;
+        }
+    }
+
+    .project-description {
+        font-family: 'OdinLight', sans-serif;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+        flex-grow: 1;
+        color: rgba(255, 255, 255, 0.9);
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .project-topics {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+
+        .topic-tag {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-family: 'OdinLight', sans-serif;
+        }
+    }
+
+    .project-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.7);
+
+        .stars {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-family: 'OdinLight', sans-serif;
+        }
+
+        .updated-at {
+            font-size: 0.75rem;
+            font-family: 'OdinLight', sans-serif;   
+        }
+    }
+}
+
+.projects-loading,
+.projects-error,
+.no-repos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    color: white;
+    font-family: 'OdinLight', sans-serif;
+}

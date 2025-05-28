@@ -65,17 +65,17 @@
 }
 
 .discord-link {
-  text-decoration: none;
-  color: inherit;
-  cursor: pointer;
-  display: block;
-  
-  &:hover {
-    .root {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    display: block;
+
+    &:hover {
+        .root {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
     }
-  }
 }
 
 .profile-section {
@@ -93,7 +93,7 @@
         left: 100%;
         width: 20px;
         /* Width of the bridge */
-        height: 100%;
+        height: 20%;
         background-color: transparent;
     }
 
@@ -133,6 +133,8 @@
 
 .navbar-username {
     user-select: none;
+    -webkit-user-select: none !important;
+
     color: white;
     font-family: OdinLight;
     font-size: 0.8rem;
@@ -191,6 +193,8 @@
 .nav-label {
     color: white;
     user-select: none;
+    -webkit-user-select: none !important;
+
     font-size: 0.7rem;
     opacity: 0.7;
     transition: opacity 0.3s ease;

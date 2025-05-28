@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // src/components/DiscordProfile.tsx
 import { useState, useEffect } from 'react';
-import './DiscordProfile.scss';
+import './Styles/DiscordProfile.scss';
 
 
 
@@ -91,7 +91,7 @@ function DiscordProfile() {
                     <div className="pfp">
                         <img
                             className="avatar"
-                            src="https://cdn.discordapp.com/avatars/328275328373882880/01a39df8f7d912562a0bb11a368e50e3.webp?size=orig&quality=lossless"
+                            src={`https://cdn.discordapp.com/avatars/${data?.discord_user?.id}/${data?.discord_user?.avatar}.webp?size=orig&quality=lossless`}
                             alt=""
                         />
                         <img className="avatarOnline" src={statusImg} alt={status} />

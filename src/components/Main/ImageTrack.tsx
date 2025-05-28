@@ -1,6 +1,6 @@
 // src/components/ImageTrack.tsx
 import { useRef, useState, useEffect, useCallback } from 'react';
-import './ImageTrack.scss';
+import './Styles/ImageTrack.scss';
 
 // Define profile data to make it more maintainable
 interface ProfileItem {

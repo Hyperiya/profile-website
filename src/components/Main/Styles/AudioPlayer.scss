@@ -1,15 +1,16 @@
 /* src/components/AudioPlayer.css */
 .audio-section {
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end; // Align items to the right
   gap: 20px;
   position: absolute;
-  top: 20px;
-  left: 20px;
+  bottom: 5px;
+  left: calc(20px + 80px);
   height: 64px;
   flex-shrink: 0;
   scale: 0.8;
   transform-origin: top left;
+  z-index: 10;
 }
 
 /* Controls */
@@ -135,11 +136,9 @@
 }
 
 #volumeSlider::-webkit-slider-runnable-track {
-  background: linear-gradient(
-    to right,
-    white var(--volume-percentage, 50%),
-    rgba(255, 255, 255, 0.2) var(--volume-percentage, 50%)
-  );
+  background: linear-gradient(to right,
+      white var(--volume-percentage, 50%),
+      rgba(255, 255, 255, 0.2) var(--volume-percentage, 50%));
   border-radius: 2px;
   height: 4px;
 }
@@ -225,15 +224,20 @@
   font-family: "Odin";
   font-weight: 1000;
   user-select: none;
+  -webkit-user-select: none !important;
+
 }
 
 .song-text {
   color: #ffffff;
-  font-size: calc(64 / 3);;
+  font-size: calc(64 / 3);
+  ;
   white-space: nowrap;
   opacity: 0.8;
   font-family: "OdinLight";
   user-select: none;
+  -webkit-user-select: none !important;
+
 }
 
 /* Animation for when music is playing */
@@ -241,9 +245,11 @@
   0% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.05);
   }
+
   100% {
     transform: scale(1);
   }

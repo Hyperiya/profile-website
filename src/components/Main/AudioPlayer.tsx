@@ -1,6 +1,6 @@
 // src/components/AudioPlayer.tsx
 import { useState, useEffect, useRef } from 'react';
-import './AudioPlayer.scss';
+import './Styles/AudioPlayer.scss';
 
 interface AudioPlayerProps {
   audioSrc?: string;

@@ -35,8 +35,8 @@ const LoadingScreen: React.FC = () => {
         const weathergirl: HTMLMediaElement | null = document.querySelector('.weathergirl')
         weathergirl!.play()
         if (enterPage) {
-            enterPage.classList.add('fade-out');
-            
+            enterPage.classList.add('fade-out');  
+            enterPage.classList.add('clicked')
         };
     };
 
