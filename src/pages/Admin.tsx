@@ -2,114 +2,162 @@
 import { useState, useEffect } from 'react';
 import './Styles/Admin.scss';
 import { useNavigate } from 'react-router-dom';
-
-// Use a strong hash (in a real app, this would be stored server-side)
-// This is a SHA-256 hash of a complex passkey
-const ADMIN_HASH = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8";
+import AnalyticsPanel from '../components/Admin/AnalyticsPanel';
+import UserManagementPanel from '../components/Admin/UserManagementPanel';
 
 function Admin() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [passkey, setPasskey] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [error, setError] = useState('');
+    const [showAnalytics, setShowAnalytics] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [showUserManagement, setShowUserManagement] = useState(false);
+    const navigate = useNavigate();
 
-  // Check if already authenticated
-  useEffect(() => {
-    const authToken = localStorage.getItem('admin_auth');
-    if (authToken === ADMIN_HASH) {
-      setIsAuthenticated(true);
-    }
-  }, []);
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
 
-  // Simple hash function (for demo purposes - use a proper crypto library in production)
-  const hashPasskey = async (key: string) => {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(key);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  };
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    try {
-      const hashedInput = await hashPasskey(passkey);
-      
-      if (hashedInput === ADMIN_HASH) {
-        localStorage.setItem('admin_auth', ADMIN_HASH);
-        setIsAuthenticated(true);
-        setError('');
-      } else {
-        setError('Invalid passkey');
-        // Add a small delay to prevent brute force attacks
-        await new Promise(resolve => setTimeout(resolve, 1000));
-      }
-    } catch (err) {
-      setError('Authentication error');
-    }
-    
-    setPasskey('');
-  };
+    // Check if already authenticated
+    useEffect(() => {
+        const authToken = localStorage.getItem('admin_auth');
+        if (authToken) {
+            setIsAuthenticated(true);
+        }
+    }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('admin_auth');
-    setIsAuthenticated(false);
-    navigate('/');
-  };
+    // Simple hash function (for demo purposes - use a proper crypto library in production)
+    // const hashPasskey = async (key: string) => {
+    //     const encoder = new TextEncoder();
+    //     const data = encoder.encode(key);
+    //     const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    //     const hashArray = Array.from(new Uint8Array(hashBuffer));
+    //     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    // };
 
-  if (!isAuthenticated) {
-    return (
-      <div className="admin-login">
-        <div className="login-container">
-          <h1>Admin Access</h1>
-          <form onSubmit={handleLogin}>
-            <div className="form-group">
-              <label htmlFor="passkey">Passkey</label>
-              <input
-                type="password"
-                id="passkey"
-                value={passkey}
-                onChange={(e) => setPasskey(e.target.value)}
-                autoComplete="off"
-                required
-              />
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        try {
+            const response = await fetch('http://localhost:5000/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                localStorage.setItem('admin_token', data.token);
+                setIsAuthenticated(true);
+            } else {
+                setError(data.message || 'Login failed');
+            }
+        } catch (err) {
+            setError('Authentication error');
+        }
+    };
+
+    const handleLogout = async () => {
+        localStorage.removeItem('admin_auth');
+        setIsAuthenticated(false);
+
+        const token = localStorage.getItem('admin_token');
+
+        await fetch('http://localhost:5000/api/sessions/kill', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ token: token })
+        });
+        navigate('/');
+    };
+
+    if (!isAuthenticated) {
+        return (
+            <div className="admin-login">
+                <div className="login-container">
+                    <h1>Admin Access</h1>
+                    <form onSubmit={handleLogin}>
+                        <div className="form-group">
+                            <label htmlFor="username">Username</label>
+                            <input
+                                type="text"
+                                id="username"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="password">Password</label>
+                            <input
+                                type="password"
+                                id="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                        </div>
+                        {error && <div className="error-message">{error}</div>}
+                        <button type="submit" disabled={loading}>
+                            {loading ? 'Logging in...' : 'Login'}
+                        </button>
+                    </form>
+                </div>
             </div>
-            {error && <div className="error-message">{error}</div>}
-            <button type="submit">Access</button>
-          </form>
-        </div>
-      </div>
-    );
-  }
+        );
+    }
 
-  return (
-    <div className="admin-panel">
-      <div className="admin-header">
-        <h1>Admin Panel</h1>
-        <button className="logout-button" onClick={handleLogout}>Logout</button>
-      </div>
-      
-      <div className="admin-content">
-        <section className="admin-section">
-          <h2>Site Management</h2>
-          <div className="admin-controls">
-            <button>Update Profile</button>
-            <button>Manage Content</button>
-            <button>View Analytics</button>
-          </div>
-        </section>
-        
-        <section className="admin-section">
-          <h2>System Status</h2>
-          <div className="status-item">
-            <span className="status-label">Last Updated:</span>
-            <span className="status-value">{new Date().toLocaleString()}</span>
-          </div>
-        </section>
-      </div>
-    </div>
-  );
+
+    return (
+        <div className="admin-panel">
+            <div className="admin-header">
+                <h1>Admin Panel</h1>
+                <button className="logout-button" onClick={handleLogout}>Logout</button>
+            </div>
+
+            <div className="admin-content">
+                <section className="admin-section">
+                    <h2>Site Management</h2>
+                    <div className="admin-controls">
+                        <button>Update Profile</button>
+                        <button>Manage Content</button>
+                        <button>Update Profile</button>
+                        <button
+                            className={showUserManagement ? 'active' : ''}
+                            onClick={() => {
+                                setShowUserManagement(!showUserManagement);
+                                setShowAnalytics(false);
+                            }}
+                        >
+                            {showUserManagement ? 'Hide Users' : 'Manage Users'}
+                        </button>
+                        <button
+                            className={showAnalytics ? 'active' : ''}
+                            onClick={() => setShowAnalytics(!showAnalytics)}
+                        >
+                            {showAnalytics ? 'Hide Analytics' : 'View Analytics'}
+                        </button>
+                    </div>
+                </section>
+
+                <section className="admin-section">
+                    <h2>System Status</h2>
+                    <div className="status-item">
+                        <span className="status-label">Last Updated:</span>
+                        <span className="status-value">{new Date().toLocaleString()}</span>
+                    </div>
+                </section>
+            </div>
+
+            {showAnalytics && <AnalyticsPanel />}
+            {showUserManagement && <UserManagementPanel />}
+        </div>
+    );
 }
 
 export default Admin;

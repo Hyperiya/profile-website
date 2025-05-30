@@ -19,18 +19,18 @@ html, body {
   padding: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden;
   background-color: #232627;
+  overflow-y: auto; /* Enable vertical scrolling */
 }
 
+
 #root {
-  height: 100vh;
-  width: 100vw;
+  min-height: 100vh; /* Use min-height instead of height */
+  width: 100%;
   background-color: #232627;
-  position: fixed;
+  position: relative; /* Change from fixed to relative */
   top: 0;
   left: 0;
-  transform-origin: center top;
 }
 
 
