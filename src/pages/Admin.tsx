@@ -5,6 +5,14 @@ import { useNavigate } from 'react-router-dom';
 import AnalyticsPanel from '../components/Admin/AnalyticsPanel';
 import UserManagementPanel from '../components/Admin/UserManagementPanel';
 
+export async function fetchCSRFToken() {
+    const response = await fetch('/api/csrf-token', {
+        credentials: 'include'
+    });
+    const data = await response.json();
+    return data.csrfToken;
+}
+
 function Admin() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [error, setError] = useState('');
@@ -34,14 +42,18 @@ function Admin() {
     //     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     // };
 
+
     const handleLogin = async (e: React.FormEvent) => {
+        const csrfToken = await fetchCSRFToken();
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:5000/api/login', {
+            const response = await fetch('https://localhost:5000/api/login', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'x-csrf-token': csrfToken
+
                 },
                 body: JSON.stringify({ username, password })
             });
@@ -60,16 +72,19 @@ function Admin() {
     };
 
     const handleLogout = async () => {
+        const csrfToken = await fetchCSRFToken();
         localStorage.removeItem('admin_auth');
         setIsAuthenticated(false);
 
         const token = localStorage.getItem('admin_token');
 
-        await fetch('http://localhost:5000/api/sessions/kill', {
+        await fetch('https://localhost:5000/api/sessions/kill', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'x-csrf-token': csrfToken
+
             },
             body: JSON.stringify({ token: token })
         });

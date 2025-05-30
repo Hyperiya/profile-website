@@ -1,6 +1,7 @@
 // src/components/Admin/UserManagementPanel.tsx
 import { useState, useEffect } from 'react';
 import './UserManagementPanel.scss';
+import { fetchCSRFToken } from '../../pages/Admin';
 
 interface User {
     _id: string;
@@ -26,6 +27,7 @@ const UserManagementPanel = () => {
         try {
             setLoading(true);
             const token = localStorage.getItem('admin_token');
+            const csrfToken = await fetchCSRFToken()
 
             if (!token) {
                 setError('Authentication required');
@@ -33,9 +35,10 @@ const UserManagementPanel = () => {
                 return;
             }
 
-            const response = await fetch('http://localhost:5000/api/users', {
+            const response = await fetch('https://localhost:5000/api/users', {
                 headers: {
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`,
+                    'x-csrf-token': csrfToken
                 }
             });
 
@@ -60,6 +63,7 @@ const UserManagementPanel = () => {
     const handleAddUser = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
+            const csrfToken = await fetchCSRFToken()
             const token = localStorage.getItem('admin_token');
 
             if (!token) {
@@ -67,11 +71,12 @@ const UserManagementPanel = () => {
                 return;
             }
 
-            const response = await fetch('http://localhost:5000/api/register', {
+            const response = await fetch('https://localhost:5000/api/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`,
+                    'x-csrf-token': csrfToken
                 },
                 body: JSON.stringify({ username: newUsername, password: newPassword })
             });
@@ -99,6 +104,7 @@ const UserManagementPanel = () => {
         }
 
         try {
+            const csrfToken = await fetchCSRFToken()
             const token = localStorage.getItem('admin_token');
 
             if (!token) {
@@ -106,11 +112,12 @@ const UserManagementPanel = () => {
                 return;
             }
 
-            const response = await fetch(`http://localhost:5000/api/users/delete`, {
+            const response = await fetch(`https://localhost:5000/api/users/delete`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`,
+                    'x-csrf-token': csrfToken
                 },
                 body: JSON.stringify({ username: username })
             });
@@ -140,7 +147,7 @@ const UserManagementPanel = () => {
         if (!editingUser) return;
 
         try {
-            console.log(`orig un: ${user}, ${newUsername}`)
+            const csrfToken = await fetchCSRFToken()
             const token = localStorage.getItem('admin_token');
 
             if (!token) {
@@ -148,11 +155,12 @@ const UserManagementPanel = () => {
                 return;
             }
 
-            const response = await fetch(`http://localhost:5000/api/users/edit`, {
+            const response = await fetch(`https://localhost:5000/api/users/edit`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`,
+                    'x-csrf-token': csrfToken
                 },
                 body: JSON.stringify({
                     newUsername: newUsername,

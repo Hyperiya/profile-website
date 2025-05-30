@@ -24,7 +24,7 @@
     "noUncheckedSideEffectImports": true,
     
     "emitDeclarationOnly": false,
-    "declaration": false,
+    "declaration": false
   },
   "include": ["src", "public/sakura"]
 }

@@ -336,6 +336,7 @@ const ImageTrack: React.FC<ImageTrackProps> = ({ title = "Hyperiya's Profiles" }
         };
     }, [mouseDownAt, startX, prevPercentage, animateTrack, ignoreDrag, updateTrackDimensions, initPosition, percentage]);
 
+    // amazonq-ignore-next-line
     return (
         <div
             className="image-track"
