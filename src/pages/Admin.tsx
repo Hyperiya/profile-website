@@ -4,14 +4,8 @@ import './Styles/Admin.scss';
 import { useNavigate } from 'react-router-dom';
 import AnalyticsPanel from '../components/Admin/AnalyticsPanel';
 import UserManagementPanel from '../components/Admin/UserManagementPanel';
+import { apiCall } from './utils/api';
 
-export async function fetchCSRFToken() {
-    const response = await fetch('/api/csrf-token', {
-        credentials: 'include'
-    });
-    const data = await response.json();
-    return data.csrfToken;
-}
 
 function Admin() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -44,7 +38,6 @@ function Admin() {
 
 
     const handleLogin = async (e: React.FormEvent) => {
-        const csrfToken = await fetchCSRFToken();
         e.preventDefault();
 
         try {
@@ -52,16 +45,17 @@ function Admin() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'x-csrf-token': csrfToken
-
                 },
-                body: JSON.stringify({ username, password })
+                body: JSON.stringify({ username:username, password:password })
             });
 
             const data = await response.json();
+            const date = new Date()
+            date.setTime(date.getTime() + 43200000)
 
             if (response.ok) {
                 localStorage.setItem('admin_token', data.token);
+                document.cookie = `token=${data.token};expires=${date}`
                 setIsAuthenticated(true);
             } else {
                 setError(data.message || 'Login failed');
@@ -72,18 +66,16 @@ function Admin() {
     };
 
     const handleLogout = async () => {
-        const csrfToken = await fetchCSRFToken();
         localStorage.removeItem('admin_auth');
         setIsAuthenticated(false);
 
         const token = localStorage.getItem('admin_token');
 
-        await fetch('https://localhost:5000/api/sessions/kill', {
+        await apiCall('/api/sessions/kill', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
-                'x-csrf-token': csrfToken
 
             },
             body: JSON.stringify({ token: token })

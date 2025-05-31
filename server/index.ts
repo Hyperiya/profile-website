@@ -7,8 +7,6 @@ import mongoose from 'mongoose';
 import validator from 'validator';
 import https from 'https';
 import fs from 'fs';
-import { doubleCsrf } from 'csrf-csrf';
-import cookieParser from 'cookie-parser';
 
 enum permissionMap {
     USER_CREATE = 'user_create', // Create user
@@ -63,14 +61,7 @@ if (!SESSION_DB_URI) throw new Error('Missing environment variable: SESSION_DB_U
 if (!ADMIN_PASSWORD) throw new Error('Missing environment variable: ADMIN_PASSWORD');
 if (!CSRF_SECRET) throw new Error('Missing environment variable: CSRF_SECRET');
 
-const options = {
-    key: fs.readFileSync('path/to/private-key.pem'),
-    cert: fs.readFileSync('path/to/certificate.pem')
-};
 
-https.createServer(options, app).listen(PORT, () => {
-    console.log(`HTTPS Server running on port ${PORT}`);
-});
 
 // Connect to MongoDB
 const userConnection = mongoose.createConnection(USER_DB_URI);
@@ -116,43 +107,8 @@ declare global {
 }
 
 // Middleware
-app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:3000',
-    credentials: true
-}));
+app.use(cors());
 app.use(express.json());
-app.use(cookieParser());
-
-
-
-const { generateCsrfToken, validateRequest } = doubleCsrf({
-    getSecret: () => CSRF_SECRET,
-    cookieName: 'x-csrf-token',
-    cookieOptions: {
-        httpOnly: true,
-        sameSite: 'strict',
-        secure: process.env.NODE_ENV === 'production'
-    },
-    size: 64,
-    ignoredMethods: ['GET', 'HEAD', 'OPTIONS'],
-    getSessionIdentifier: (req) => req.cookies?.sessionID || ''
-});
-
-// Apply CSRF protection to all routes
-app.use((req, res, next) => {
-    // Skip CSRF validation for GET, HEAD, OPTIONS
-    if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
-        return next();
-    }
-
-    try {
-        validateRequest(req);
-        next();
-    } catch (error) {
-        res.status(403).json({ error: 'CSRF validation failed' });
-    }
-});
-
 
 async function createUser(username: string, password: string) {
     const sanitizedUsername = validator.escape(username)
@@ -186,7 +142,7 @@ async function createInitialUser() {
             console.info('Admin user created');
         } else {
             // Update existing admin's password hash
-            const newHash = await bcrypt.hash('securepassword', 10);
+            const newHash = await bcrypt.hash(ADMIN_PASSWORD, 10);
             existingUser.passwordHash = newHash;
             await existingUser.save();
             console.info('Admin user updated');
@@ -212,6 +168,7 @@ const authenticateToken = (req: express.Request, res: express.Response, next: ex
 
     jwt.verify(token, JWT_SECRET, (err: any, user: any) => {
         if (err) {
+            console.error(err)
             res.status(403).json({ message: 'Forbidden' });
             return; // Return void here
         }
@@ -223,9 +180,9 @@ const authenticateToken = (req: express.Request, res: express.Response, next: ex
 
 async function storeToken(token: string, username: string, permissions: string[], createdAt: number, expiresAt: number, role: string) {
     const sanitizedUsername = await validator.escape(username)
-    const existingToken = await Token.findOne({ sanitizedUsername });
+    const existingToken = await Token.findOne({ username: sanitizedUsername });
     if (existingToken) {
-        existingToken.deleteOne();
+        await existingToken.deleteOne();
     }
 
     return Token.create({
@@ -241,7 +198,7 @@ async function storeToken(token: string, username: string, permissions: string[]
 
 async function getTokenPerms(token: string): Promise<permissionMap[]> {
     const sanitizedToken = await validator.escape(token)
-    const existingToken = await Token.findOne({ sanitizedToken });
+    const existingToken = await Token.findOne({ token: sanitizedToken });
     if (!existingToken) {
         throw new Error('Token Expired');
     }
@@ -262,11 +219,7 @@ async function getTokenPerms(token: string): Promise<permissionMap[]> {
     }).filter(Boolean) as permissionMap[]; // Filter out any null values
 }
 
-app.get('/api/csrf-token', (req, res) => {
-    const token = generateCsrfToken(req, res);
-    res.json({ csrfToken: token });
-    return;
-});
+
 // Login route
 app.post('/api/login', async (req: express.Request, res: express.Response) => {
     try {
@@ -274,12 +227,14 @@ app.post('/api/login', async (req: express.Request, res: express.Response) => {
 
         // Find user
         const user = await User.findOne({ username });
+        console.log(username, user)
         if (!user) {
             res.status(401).json({ message: 'Invalid credentials (Username)' })
             return;
         };
 
         // Check password
+        console.log(password)
         const validPassword = await bcrypt.compare(password, user.passwordHash);
         if (!validPassword) {
             res.status(401).json({ message: 'Invalid credentials (Password)' })
@@ -295,7 +250,7 @@ app.post('/api/login', async (req: express.Request, res: express.Response) => {
         const userPermissions = user.permissions;
 
         await storeToken(
-            token,
+                token,
             user.username,
             userPermissions,
             Date.now(),
@@ -304,7 +259,9 @@ app.post('/api/login', async (req: express.Request, res: express.Response) => {
         );
 
 
-        res.json(await validator.escape(token));
+        await res.json({token: token});
+        console.log(token)
+
         return;
     } catch (error) {
         console.error('Login error:', error);
@@ -341,7 +298,7 @@ app.post('/api/register', authenticateToken, async (req: express.Request, res: e
         return;
     } catch (error) {
         console.error('Registration error:', error);
-        res.status(500).json({ message: error });
+        res.status(500).json('Registration error');
     }
 });
 
@@ -373,7 +330,7 @@ app.get('/api/users/', authenticateToken, async (req: express.Request, res: expr
         return;
     } catch (error) {
         console.error('Registration error:', error);
-        res.status(500).json({ message: error });
+        res.status(500).json('Registration error');
     }
 })
 
@@ -421,7 +378,7 @@ app.post('/api/users/delete', authenticateToken, async (req: express.Request, re
 
     } catch (error) {
         console.error('Registration error:', error);
-        res.status(500).json({ message: error });
+        res.status(500).json("Registration error");
         return;
     }
 })
@@ -544,7 +501,7 @@ app.post('/api/sessions/kill', authenticateToken, async (req: express.Request, r
         return;
     } catch (error) {
         console.error('Registration error:', error);
-        res.status(500).json({ message: error });
+        res.status(500).json('Registration error');
         return;
     }
 });
@@ -562,6 +519,47 @@ app.get('/api/admin/data', authenticateToken, (req: express.Request, res: expres
     });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+// Add these imports at the top of your file
+import path from 'path';
+import { execSync } from 'child_process';
+
+// Add this function to generate self-signed certificates if they don't exist
+function generateSelfSignedCertificates() {
+  const certDir = path.join(import.meta.dirname, '../certs');
+  const keyPath = path.join(import.meta.dirname, 'key.pem');
+  const certPath = path.join(import.meta.dirname, 'cert.pem');
+  
+  if (!fs.existsSync(certDir)) {
+    fs.mkdirSync(certDir, { recursive: true });
+  }
+  
+  if (!fs.existsSync(keyPath) || !fs.existsSync(certPath)) {
+    console.log('Generating self-signed certificates for development...');
+    
+    execSync(`openssl req -x509 -newkey rsa:2048 -keyout ${keyPath} -out ${certPath} -days 365 -nodes -subj "/CN=localhost"`);
+    console.log('Self-signed certificates generated successfully.');
+  }
+  
+  return { key: fs.readFileSync(keyPath), cert: fs.readFileSync(certPath) };
+}
+
+// Replace your existing server startup code with this
+if (process.env.NODE_ENV === 'production') {
+  // Use HTTPS in production with real certificates
+  const options = {
+    key: fs.readFileSync(process.env.SSL_KEY_PATH || '/path/to/key.pem'),
+    cert: fs.readFileSync(process.env.SSL_CERT_PATH || '/path/to/cert.pem')
+  };
+
+  https.createServer(options, app).listen(PORT, () => {
+    console.log(`HTTPS Server running on port ${PORT}`);
+  });
+} else {
+  // Use HTTPS in development with self-signed certificates
+  const options = generateSelfSignedCertificates();
+  
+  https.createServer(options, app).listen(PORT, () => {
+    console.log(`HTTPS Server running on port ${PORT} (Development Mode with self-signed certificate)`);
+    console.log(`Access your server at https://localhost:${PORT}`);
+  });
+}

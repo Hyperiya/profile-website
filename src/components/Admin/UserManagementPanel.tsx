@@ -1,7 +1,7 @@
 // src/components/Admin/UserManagementPanel.tsx
 import { useState, useEffect } from 'react';
 import './UserManagementPanel.scss';
-import { fetchCSRFToken } from '../../pages/Admin';
+import { apiCall } from '../../pages/utils/api';
 
 interface User {
     _id: string;
@@ -27,7 +27,6 @@ const UserManagementPanel = () => {
         try {
             setLoading(true);
             const token = localStorage.getItem('admin_token');
-            const csrfToken = await fetchCSRFToken()
 
             if (!token) {
                 setError('Authentication required');
@@ -35,18 +34,13 @@ const UserManagementPanel = () => {
                 return;
             }
 
-            const response = await fetch('https://localhost:5000/api/users', {
+            const response = await apiCall('/api/users', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'x-csrf-token': csrfToken
                 }
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to fetch users');
-            }
-
-            const data = await response.json();
+            const data = response;
             setUsers(data);
             setLoading(false);
         } catch (err) {
@@ -63,7 +57,6 @@ const UserManagementPanel = () => {
     const handleAddUser = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const csrfToken = await fetchCSRFToken()
             const token = localStorage.getItem('admin_token');
 
             if (!token) {
@@ -71,12 +64,11 @@ const UserManagementPanel = () => {
                 return;
             }
 
-            const response = await fetch('https://localhost:5000/api/register', {
+            const response = await apiCall('/api/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
-                    'x-csrf-token': csrfToken
                 },
                 body: JSON.stringify({ username: newUsername, password: newPassword })
             });
@@ -104,7 +96,6 @@ const UserManagementPanel = () => {
         }
 
         try {
-            const csrfToken = await fetchCSRFToken()
             const token = localStorage.getItem('admin_token');
 
             if (!token) {
@@ -112,12 +103,11 @@ const UserManagementPanel = () => {
                 return;
             }
 
-            const response = await fetch(`https://localhost:5000/api/users/delete`, {
+            const response = await apiCall(`/api/users/delete`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
-                    'x-csrf-token': csrfToken
                 },
                 body: JSON.stringify({ username: username })
             });
@@ -141,13 +131,13 @@ const UserManagementPanel = () => {
         setShowEditForm(true);
     };
 
-    // Save edited user
-    const handleSaveEdit = async (e: React.FormEvent, user: string) => {
+    const handleKillSession = async (e: React.FormEvent, user: string) => {
         e.preventDefault();
-        if (!editingUser) return;
+        if (!window.confirm('Are you sure you want to kill this session?')) {
+            return;
+        }
 
         try {
-            const csrfToken = await fetchCSRFToken()
             const token = localStorage.getItem('admin_token');
 
             if (!token) {
@@ -155,12 +145,45 @@ const UserManagementPanel = () => {
                 return;
             }
 
-            const response = await fetch(`https://localhost:5000/api/users/edit`, {
+            const response = await apiCall(`/api/users/kill`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
-                    'x-csrf-token': csrfToken
+                },
+                body: JSON.stringify({ username: user })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to kill session');
+            }
+
+            // Refresh users
+            fetchUsers();
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'An error occurred');
+        }
+    
+    }
+
+    // Save edited user
+    const handleSaveEdit = async (e: React.FormEvent, user: string) => {
+        e.preventDefault();
+        if (!editingUser) return;
+
+        try {
+            const token = localStorage.getItem('admin_token');
+
+            if (!token) {
+                setError('Authentication required');
+                return;
+            }
+
+            const response = await apiCall(`/api/users/edit`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({
                     newUsername: newUsername,
@@ -287,6 +310,12 @@ const UserManagementPanel = () => {
                                             onClick={() => handleEditUser(user)}
                                         >
                                             Edit
+                                        </button>
+                                        <button
+                                            className="kill-btn"
+                                            onClick={(e) => handleKillSession(e, user.username)}
+                                        >
+                                            End Session
                                         </button>
                                         <button
                                             className="delete-btn"

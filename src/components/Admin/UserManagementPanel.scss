@@ -6,19 +6,19 @@
   padding: 1.5rem;
   margin-top: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  
+
   .panel-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
-    
+
     h2 {
       margin: 0;
       font-family: 'Odin', sans-serif;
       color: white;
     }
-    
+
     .add-user-btn {
       background-color: #4a6cf7;
       color: white;
@@ -28,13 +28,13 @@
       cursor: pointer;
       font-family: 'OdinLight', sans-serif;
       transition: background-color 0.3s;
-      
+
       &:hover {
         background-color: #3a5ce7;
       }
     }
   }
-  
+
   .error-message {
     font-family: OdinLight;
     background-color: rgba(255, 0, 0, 0.1);
@@ -44,30 +44,30 @@
     margin-bottom: 1rem;
     border-radius: 4px;
   }
-  
+
   .user-form {
     background-color: rgba(255, 255, 255, 0.05);
     padding: 1.5rem;
     border-radius: 6px;
     margin-bottom: 1.5rem;
-    
+
     h3 {
       margin-top: 0;
       margin-bottom: 1rem;
       font-family: 'Odin', sans-serif;
       color: white;
     }
-    
+
     .form-group {
       margin-bottom: 1rem;
-      
+
       label {
         display: block;
         margin-bottom: 0.5rem;
         color: rgba(255, 255, 255, 0.8);
         font-family: 'OdinLight', sans-serif;
       }
-      
+
       input {
         width: 100%;
         padding: 0.75rem;
@@ -76,38 +76,38 @@
         border-radius: 4px;
         color: white;
         font-family: 'OdinLight', sans-serif;
-        
+
         &:focus {
           outline: none;
           border-color: #4a6cf7;
         }
       }
     }
-    
+
     .form-actions {
       display: flex;
       gap: 1rem;
-      
+
       button {
         padding: 0.75rem 1rem;
         border: none;
         border-radius: 4px;
         cursor: pointer;
         font-family: 'OdinLight', sans-serif;
-        
+
         &[type="submit"] {
           background-color: #4a6cf7;
           color: white;
-          
+
           &:hover {
             background-color: #3a5ce7;
           }
         }
-        
+
         &[type="button"] {
           background-color: rgba(255, 255, 255, 0.1);
           color: white;
-          
+
           &:hover {
             background-color: rgba(255, 255, 255, 0.2);
           }
@@ -115,36 +115,37 @@
       }
     }
   }
-  
+
   .users-table-container {
     overflow-x: auto;
   }
-  
+
   .users-table {
     width: 100%;
     border-collapse: collapse;
     color: white;
-    
-    th, td {
+
+    th,
+    td {
       padding: 1rem;
       text-align: left;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
-    
+
     th {
       font-family: 'Odin', sans-serif;
       font-weight: normal;
       color: rgba(255, 255, 255, 0.7);
     }
-    
+
     td {
       font-family: 'OdinLight', sans-serif;
     }
-    
+
     .actions {
       display: flex;
       gap: 0.5rem;
-      
+
       button {
         padding: 0.5rem 0.75rem;
         border: none;
@@ -152,22 +153,32 @@
         cursor: pointer;
         font-family: 'OdinLight', sans-serif;
         font-size: 0.8rem;
-        
+
         &.edit-btn {
           background-color: rgba(74, 108, 247, 0.2);
           color: #4a6cf7;
-          
+
           &:hover {
             background-color: rgba(74, 108, 247, 0.3);
           }
         }
-        
+
         &.delete-btn {
           background-color: rgba(255, 77, 77, 0.2);
           color: #ff4d4d;
-          
+
           &:hover {
             background-color: rgba(255, 77, 77, 0.3);
+          }
+        }
+
+        &.kill-btn {
+          background-color: rgba(255, 175, 77, 0.2);
+          color: rgba(255, 175, 77, 1);
+          
+          &:hover {
+            background-color: rgba(255, 175, 77, 0.3);
+
           }
         }
       }
