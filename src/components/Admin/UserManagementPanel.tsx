@@ -212,7 +212,7 @@ const UserManagementPanel = () => {
     }
 
     return (
-        <div className="user-management-panel">
+        <div className="user-management-panel" id='panel'>
             <div className="panel-header">
                 <h2>User Management</h2>
                 <button

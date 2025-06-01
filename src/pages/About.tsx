@@ -1,15 +1,5 @@
 // src/pages/About.tsx
-import { useState } from 'react';
 import './Styles/About.scss';
-
-const artists = [
-    { name: 's7phonn', image: 'https://x.com/s7phonn' },
-    { name: 'Unknown (From Google)' },
-    { name: 'SalemBRIght', image: 'https://pinterest.com/salembright777/' },
-    { name: 'gmanee' },
-    { name: 'TankxCodex', image: 'https://tankxcodex.newgrounds.com/' },
-    { name: 'kanekoshake', image: 'https://x.com/kanekoshake' }
-]
 
 const skills = [
     { category: 'Development', skills: ['React', 'TypeScript', 'CSS/SCSS', 'Node.js', 'Python', 'Rust'] },
@@ -23,8 +13,6 @@ const aboutMe = [
 
 
 function About() {
-    const [showArtists, setShowArtists] = useState(false);
-
     return (
         <div className="about-container">
             <div className="about-content">
@@ -34,6 +22,12 @@ function About() {
                     {aboutMe.map((paragraph, index) => (
                         <p key={index}>{paragraph.paragraph}</p>
                     ))}
+                </section>
+                
+                <section className="about-section">
+                    <h2>Pronouns</h2>
+                    <p>He/She</p>
+                    <p>Genderfluid</p>
                 </section>
 
                 <section className="about-section">
@@ -55,20 +49,9 @@ function About() {
                 </section>
 
                 <section className="about-section">
-                    <h2 className="artists-heading" onClick={() => setShowArtists(!showArtists)}>
-                        Image Credits {showArtists ? '▼' : '▶'}
-                    </h2>
-
-                    {showArtists && (
-                        <div className='artists-list'>
-                            {artists.map((artist, index) => (
-                                <a key={artist.name} className="artist-item" href={artist.image}>
-                                    <span className='image-number'>Image {index + 1}:</span>
-                                    <span className='artist-name'>{artist.name}</span>
-                                </a>
-                            ))}
-                        </div>
-                    )}
+                    <p>
+                        If not otherwise stated, none of the art on this page is mine.
+                    </p>
                 </section>
             </div>
         </div>

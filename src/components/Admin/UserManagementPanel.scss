@@ -1,11 +1,5 @@
 // src/components/Admin/UserManagementPanel.scss
 .user-management-panel {
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(10px);
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-top: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
 
   .panel-header {
     display: flex;
@@ -175,7 +169,7 @@
         &.kill-btn {
           background-color: rgba(255, 175, 77, 0.2);
           color: rgba(255, 175, 77, 1);
-          
+
           &:hover {
             background-color: rgba(255, 175, 77, 0.3);
 

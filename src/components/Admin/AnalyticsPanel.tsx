@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import './AnalyticsPanel.scss';
 
 // Function to get the last 6 months
+// Function to get the last 6 months
 const getLast6Months = () => {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const result = [];
@@ -13,29 +14,82 @@ const getLast6Months = () => {
     const adjustedMonthIndex = monthIndex < 0 ? monthIndex + 12 : monthIndex;
     const year = currentDate.getFullYear() - (monthIndex < 0 ? 1 : 0);
     
-    // Generate random visitor count (in a real app, this would come from an API)
+    // Generate random visitor counts
     const visitors = Math.floor(Math.random() * 200) + 50;
+    const uniqueVisitors = Math.floor(visitors * 0.7); // Assume ~70% are unique visitors
     
     result.push({
       date: months[adjustedMonthIndex],
       month: adjustedMonthIndex,
       year: year,
-      visitors: visitors
+      visitors: visitors,
+      uniqueVisitors: uniqueVisitors // Add this property
     });
   }
   
   return result;
 };
 
+
+interface AnalyticsData {
+  date: string;
+  month: number;
+  year: number;
+  visitors: number;
+  uniqueVisitors: number;
+}
+
+interface AnalyticsTotals {
+  uniqueVisitors: number;
+  totalVisits: number;
+}
+
 const AnalyticsPanel = () => {
-  const [analyticsData, setAnalyticsData] = useState(getLast6Months());
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData[]>([]);
+  const [totals, setTotals] = useState<AnalyticsTotals>({ uniqueVisitors: 0, totalVisits: 0 });
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        setLoading(true);
+        const token = document.cookie;
+        
+        if (!token) {
+          setLoading(false);
+          return;
+        }
+        
+        const response = await fetch('https://localhost:5000/api/analytics/data', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch analytics data');
+        }
+        
+        const data = await response.json();
+        setAnalyticsData(data.monthly);
+        setTotals(data.totals);
+      } catch (err) {
+        // Use mock data if real data fails
+        setAnalyticsData(getLast6Months());
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchAnalytics();
+  }, []);
   
   const maxVisitors = Math.max(...analyticsData.map(item => item.visitors));
   
   // Fixed calculation for points - use fixed positions for x
   const points = analyticsData.map((item, index) => {
     // Use fixed positions that match the x-axis labels
-    const x = index * (1 / (analyticsData.length - 1));
+    const x = index * (100 / (analyticsData.length - 1));
     const y = 100 - ((item.visitors / maxVisitors) * 100);
     return { x, y, data: item };
   });
@@ -52,9 +106,25 @@ const AnalyticsPanel = () => {
     return `${generatePath()} L 100% 100% L 0% 100% Z`;
   };
   
+  if (loading) {
+    return <div className="analytics-loading">Loading analytics data...</div>;
+  }
+  
   return (
-    <div className="analytics-floating-panel">
+    <div className="analytics-floating-panel" id='panel'>
       <h2>Site Analytics</h2>
+      
+      <div className="analytics-summary">
+        <div className="summary-card">
+          <div className="summary-value">{totals.uniqueVisitors}</div>
+          <div className="summary-label">Unique Visitors</div>
+        </div>
+        <div className="summary-card">
+          <div className="summary-value">{totals.totalVisits}</div>
+          <div className="summary-label">Total Visits</div>
+        </div>
+      </div>
+      
       <div className="analytics-container">
         <h3>Monthly Visitors (Last 6 Months)</h3>
         <div className="line-graph">

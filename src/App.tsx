@@ -1,5 +1,6 @@
 // src/App.tsx
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { useEffect } from 'react'
 
 import Home from './pages/Home'
 import Projects from './pages/Projects'
@@ -15,6 +16,39 @@ import AudioPlayer from './components/Main/AudioPlayer'
 import { Sakura } from './Sakura'
 
 function App() {
+
+  useEffect(() => {
+    // Track visitor
+    const trackVisit = async () => {
+      try {
+        // Get visitor ID from localStorage or create new one
+        let visitorId = localStorage.getItem('visitor_id');
+        
+        const response = await fetch('https://localhost:5000/api/analytics/record-visit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            visitorId,
+            referrer: document.referrer,
+            userAgent: navigator.userAgent
+          })
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          // Store the visitor ID for future visits
+          localStorage.setItem('visitor_id', data.visitorId);
+        }
+      } catch (error) {
+        console.error('Error tracking visit:', error);
+      }
+    };
+    
+    trackVisit();
+  }, []);
+
   return (
     <>
       <Router>

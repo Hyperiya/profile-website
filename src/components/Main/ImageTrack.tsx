@@ -10,47 +10,6 @@ interface ProfileItem {
     title: string;
 }
 
-
-
-const profileItems: ProfileItem[] = [
-    {
-        id: 'discord',
-        url: 'https://discordapp.com/users/328275328373882880',
-        image: '/images/image1.jpg',
-        title: 'Discord',
-    },
-    {
-        id: 'gamebanana',
-        url: 'https://gamebanana.com/members/3298349',
-        image: '/images/image2.jpg',
-        title: 'GameBanana'
-    },
-    {
-        id: 'patreon',
-        url: 'https://patreon.com/hyperiya',
-        image: '/images/image3.jpg',
-        title: 'Patreon'
-    },
-    {
-        id: 'steam',
-        url: 'https://steamcommunity.com/id/hypxria/',
-        image: '/images/image4.jpg',
-        title: 'Steam',
-    },
-    {
-        id: 'github',
-        url: 'https://github.com/Hypxria',
-        image: '/images/image5.jpg',
-        title: 'Github'
-    },
-    {
-        id: 'pinterest',
-        url: 'https://www.pinterest.com/hyperiyaa/',
-        image: '/images/image6.jpg',
-        title: 'Pinterest'
-    }
-];
-
 interface ImageTrackProps {
     title?: string;
 }
@@ -60,6 +19,24 @@ interface ImageTrackProps {
 }
 
 const ImageTrack: React.FC<ImageTrackProps> = ({ title = "Hyperiya's Profiles" }) => {
+    const [profileItems, setProfileItems] = useState<ProfileItem[]>([]);
+
+    useEffect(() => {
+        const fetchProfiles = async () => {
+            try {
+                const response = await fetch('https://localhost:5000/api/profiles');
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setProfileItems(data);
+                }
+            } catch (error) {
+                console.error('Error fetching profiles:', error);
+            }
+        };
+
+        fetchProfiles();
+    }, []);
     const [initPosition] = useState<number>(38)
 
     const trackRef = useRef<HTMLDivElement>(null);
