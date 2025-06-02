@@ -30,7 +30,7 @@ const ContentManagementPanel = () => {
                 return;
             }
 
-            const response = await fetch('https://localhost:5000/api/images', {
+            const response = await fetch(`${window.API_URL}/api/images`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -71,7 +71,7 @@ const ContentManagementPanel = () => {
                 return;
             }
 
-            const response = await fetch('https://localhost:5000/api/upload', {
+            const response = await fetch(`${window.API_URL}/api/upload`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -110,7 +110,7 @@ const ContentManagementPanel = () => {
                 return;
             }
 
-            const response = await fetch('https://localhost:5000/api/images/delete', {
+            const response = await fetch(`${window.API_URL}/api/images/delete`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -34,7 +34,7 @@ const ProfileManagementPanel = () => {
                 return;
             }
 
-            const response = await fetch('https://localhost:5000/api/images', {
+            const response = await fetch(`${window.API_URL}/api/images`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -55,7 +55,7 @@ const ProfileManagementPanel = () => {
     const fetchProfiles = async () => {
         try {
             setLoading(true);
-            const response = await fetch('https://localhost:5000/api/profiles');
+            const response = await fetch(`${window.API_URL}/api/profiles`);
 
             if (!response.ok) {
                 throw new Error('Failed to fetch profiles');
@@ -110,7 +110,7 @@ const ProfileManagementPanel = () => {
                 return;
             }
 
-            const response = await fetch('https://localhost:5000/api/profiles/delete', {
+            const response = await fetch(`${window.API_URL}/api/profiles/delete`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -142,7 +142,7 @@ const ProfileManagementPanel = () => {
                 return;
             }
 
-            let endpoint = 'https://localhost:5000/api/profiles/update';
+            let endpoint = `${window.API_URL}/api/profiles/update`;
             let body: any = {
                 title,
                 url,
@@ -151,7 +151,7 @@ const ProfileManagementPanel = () => {
             };
 
             if (isCreating) {
-                endpoint = 'https://localhost:5000/api/profiles/create';
+                endpoint = `${window.API_URL}/api/profiles/create`;
                 body.id = id.toLowerCase().replace(/\s+/g, '-');
             } else if (editingProfile) {
                 body.id = editingProfile.id;

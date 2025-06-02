@@ -24,7 +24,7 @@ function App() {
         // Get visitor ID from localStorage or create new one
         let visitorId = localStorage.getItem('visitor_id');
         
-        const response = await fetch('https://localhost:5000/api/analytics/record-visit', {
+        const response = await fetch(`${window.API_URL}/api/analytics/record-visit`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

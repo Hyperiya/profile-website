@@ -24,7 +24,7 @@ const ImageTrack: React.FC<ImageTrackProps> = ({ title = "Hyperiya's Profiles" }
     useEffect(() => {
         const fetchProfiles = async () => {
             try {
-                const response = await fetch('https://localhost:5000/api/profiles');
+                const response = await fetch(`${window.API_URL}/api/profiles`);
 
                 if (response.ok) {
                     const data = await response.json();

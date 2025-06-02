@@ -60,7 +60,7 @@ const AnalyticsPanel = () => {
           return;
         }
         
-        const response = await fetch('https://localhost:5000/api/analytics/data', {
+        const response = await fetch(`${window.API_URL}/api/analytics/data`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }

@@ -82,7 +82,7 @@ function DiscordProfile() {
                 <div className="color-banner" style={{ background: "#533b6c" }}></div>
             </div>
             <a
-                href="https://discordapp.com/users/328275328373882880"
+                href={`https://discordapp.com/users/data?.discord_user?.id`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="discord-link"

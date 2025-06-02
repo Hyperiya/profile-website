@@ -6,7 +6,6 @@ import AnalyticsPanel from '../components/Admin/AnalyticsPanel';
 import UserManagementPanel from '../components/Admin/UserManagementPanel';
 import ProfileManagementPanel from '../components/Admin/ProfileManagementPanel';
 import ContentManagementPanel from '../components/Admin/ContentManagementPanel';
-import { apiCall } from './utils/api';
 
 enum panelMap {
     CONTENT = 'content',
@@ -46,7 +45,7 @@ function Admin() {
         e.preventDefault();
 
         try {
-            const response = await fetch('https://localhost:5000/api/login', {
+            const response = await fetch(`${window.API_URL}/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -76,7 +75,7 @@ function Admin() {
 
         const token = localStorage.getItem('admin_token');
 
-        await apiCall('/api/sessions/kill', {
+        await window.apiCall('/api/sessions/kill', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

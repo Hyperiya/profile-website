@@ -1,7 +1,6 @@
 // src/components/Admin/UserManagementPanel.tsx
 import { useState, useEffect } from 'react';
 import './UserManagementPanel.scss';
-import { apiCall } from '../../pages/utils/api';
 
 interface User {
     _id: string;
@@ -34,7 +33,7 @@ const UserManagementPanel = () => {
                 return;
             }
 
-            const response = await apiCall('/api/users', {
+            const response = await window.apiCall('/api/users', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 }
@@ -64,7 +63,7 @@ const UserManagementPanel = () => {
                 return;
             }
 
-            const response = await apiCall('/api/register', {
+            const response = await window.apiCall('/api/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -103,7 +102,7 @@ const UserManagementPanel = () => {
                 return;
             }
 
-            const response = await apiCall(`/api/users/delete`, {
+            const response = await window.apiCall(`/api/users/delete`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -145,7 +144,7 @@ const UserManagementPanel = () => {
                 return;
             }
 
-            const response = await apiCall(`/api/users/kill`, {
+            const response = await window.apiCall(`/api/users/kill`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -179,7 +178,7 @@ const UserManagementPanel = () => {
                 return;
             }
 
-            const response = await apiCall(`/api/users/edit`, {
+            const response = await window.apiCall(`/api/users/edit`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
