@@ -10,6 +10,7 @@
     "forceConsistentCasingInFileNames": true,
     "allowImportingTsExtensions": true,
     "noEmit": true,
+    "typeRoots": ["./node_modules/@types", "./src/types"]
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist"]
