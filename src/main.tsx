@@ -1,6 +1,9 @@
 import { createRoot } from 'react-dom/client'
 import './index.scss'
 import App from './App.tsx'
+import DOMPurify from 'dompurify'
+
+import { api } from './utils/api.ts'
 
 const isDevelopment = import.meta.env.DEV; // true in development, false in production
 
@@ -15,9 +18,10 @@ if (!isDevelopment) {
 }
 
 
+
 window.apiCall = async (endpoint: string, options: any) => {
-  const url = `${window.API_URL}${endpoint}`;
-  const response = await fetch(url, {
+  const url = `${endpoint}`;
+  const response = await api.fetch(url, {
     ...options,
     headers: {
       ...options?.headers,
@@ -26,10 +30,13 @@ window.apiCall = async (endpoint: string, options: any) => {
   });
 
   if (!response.ok) {
+    
     throw new Error(`API error: ${response.status}`);
   }
 
-  return response.json();
+  const data = DOMPurify.sanitize(await response.json());
+  // Ensure that any data rendered to the DOM is sanitized or escaped in your React components.
+  return data;
 };
 
 createRoot(document.getElementById('root')!).render(

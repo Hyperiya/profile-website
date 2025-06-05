@@ -216,35 +216,79 @@
     }
 }
 
-.image-dropdown {
-  width: 100%;
-  padding: 10px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-  color: white;
-  font-family: 'OdinLight', sans-serif;
-  
-  &:focus {
-    outline: none;
-    border-color: #4a6cf7;
-  }
-  
-  option {
-    background-color: #232627;
-    color: white;
-  }
+.image-section {
+    margin-bottom: 15px;
+}
+
+.image-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+
+    .image-upload-container {
+        position: relative;
+    }
+
+    .upload-new-image-btn {
+        padding: 10px 0px;
+        min-width: 125px;
+        background-color: #4a6cf7;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-family: 'OdinLight', sans-serif;
+
+        &:hover {
+            background-color: #3a5cd7;
+        }
+
+        &.active {
+            background-color: #dc3545;
+
+            &:hover {
+                background-color: #c82333;
+            }
+        }
+    }
+
+    .image-dropdown {
+        flex: 1;
+        padding: 10px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+        color: white;
+        font-family: 'OdinLight', sans-serif;
+
+        &:focus {
+            outline: none;
+            border-color: #4a6cf7;
+        }
+
+        option {
+            background-color: #232627;
+            color: white;
+        }
+    }
+}
+
+.image-uploader-compartment {
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 15px;
 }
 
 .image-preview {
-  margin-top: 10px;
-  max-width: 200px;
-  border-radius: 4px;
-  overflow: hidden;
-  
-  img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
+    margin-top: 10px;
+    max-width: 200px;
+    border-radius: 4px;
+    overflow: hidden;
+
+    img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
 }

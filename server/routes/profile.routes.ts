@@ -8,16 +8,20 @@ const router = express.Router();
 
 router.get('/', requestLimiter, async (req, res) => {
     try {
+        
         const profiles = await Profile.find();
         res.json(profiles);
     } catch (error) {
+        
         console.error('Error fetching profiles:', error);
         res.status(500).json({ message: 'Failed to fetch profiles' });
     }
 });
 
+
 router.post('/update', requestLimiter, authenticateToken, async (req, res) => {
     try {
+        
         const authHeader = req.headers['authorization'];
         const token = authHeader && authHeader.split(' ')[1];
 
@@ -58,12 +62,22 @@ router.post('/update', requestLimiter, authenticateToken, async (req, res) => {
         if (color) profile.color = color;
 
         await profile.save();
-        res.json({ message: 'Profile updated successfully', profile });
+        // Sanitize profile fields before sending to client
+        const sanitizedProfile = {
+            id: String(profile.id),
+            title: String(profile.title),
+            url: String(profile.url),
+            image: String(profile.image),
+            color: String(profile.color)
+        };
+        
+        res.json({ message: 'Profile updated successfully', profile: sanitizedProfile });
     } catch (error) {
         console.error('Error updating profile:', error);
         res.status(500).json({ message: 'Failed to update profile' });
     }
 });
+
 
 router.post('/create', requestLimiter, authenticateToken, async (req, res) => {
     try {
@@ -108,12 +122,14 @@ router.post('/create', requestLimiter, authenticateToken, async (req, res) => {
             color: color || '#4a6cf7'
         });
 
+        
         res.status(201).json({ message: 'Profile created successfully', profile: newProfile });
     } catch (error) {
         console.error('Error creating profile:', error);
         res.status(500).json({ message: 'Failed to create profile' });
     }
 });
+
 
 router.post('/delete', requestLimiter, authenticateToken, async (req, res) => {
     try {

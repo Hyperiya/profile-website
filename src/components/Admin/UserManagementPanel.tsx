@@ -1,6 +1,7 @@
 // src/components/Admin/UserManagementPanel.tsx
 import { useState, useEffect } from 'react';
 import './UserManagementPanel.scss';
+import { api } from '../../utils/api';
 
 interface User {
     _id: string;
@@ -33,13 +34,14 @@ const UserManagementPanel = () => {
                 return;
             }
 
-            const response = await window.apiCall('/api/users', {
+            const response = await api.fetch('/api/users', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 }
             });
 
-            const data = response;
+            
+            const data = await response.json();
             setUsers(data);
             setLoading(false);
         } catch (err) {
@@ -63,7 +65,7 @@ const UserManagementPanel = () => {
                 return;
             }
 
-            const response = await window.apiCall('/api/register', {
+            const response = await api.fetch('/api/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -80,7 +82,9 @@ const UserManagementPanel = () => {
             // Reset form and refresh users
             setNewUsername('');
             setNewPassword('');
+            
             await setShowAddForm(false);
+            
             console.log('hide form')
             await fetchUsers();
         } catch (err) {
@@ -102,7 +106,7 @@ const UserManagementPanel = () => {
                 return;
             }
 
-            const response = await window.apiCall(`/api/users/delete`, {
+            const response = await api.fetch(`/api/users/delete`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -112,6 +116,7 @@ const UserManagementPanel = () => {
             });
 
             if (!response.ok) {
+                
                 throw new Error('Failed to delete user');
             }
 
@@ -130,6 +135,7 @@ const UserManagementPanel = () => {
         setShowEditForm(true);
     };
 
+    
     const handleKillSession = async (e: React.FormEvent, user: string) => {
         e.preventDefault();
         if (!window.confirm('Are you sure you want to kill this session?')) {
@@ -144,7 +150,7 @@ const UserManagementPanel = () => {
                 return;
             }
 
-            const response = await window.apiCall(`/api/users/kill`, {
+            const response = await api.fetch(`/api/users/kill`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -178,7 +184,7 @@ const UserManagementPanel = () => {
                 return;
             }
 
-            const response = await window.apiCall(`/api/users/edit`, {
+            const response = await api.fetch(`/api/users/edit`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

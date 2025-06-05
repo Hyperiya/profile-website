@@ -1,6 +1,8 @@
 // src/components/Admin/ContentManagementPanel.tsx
 import { useState, useEffect, useRef } from 'react';
 import './ContentManagementPanel.scss';
+import DOMPurify from 'dompurify';
+import { api } from '../../utils/api';
 
 interface UploadedImage {
     filename: string;
@@ -30,7 +32,7 @@ const ContentManagementPanel = () => {
                 return;
             }
 
-            const response = await fetch(`${window.API_URL}/api/images`, {
+            const response = await api.fetch(`/api/upload/`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -40,10 +42,17 @@ const ContentManagementPanel = () => {
                 throw new Error('Failed to fetch images');
             }
 
-            const data = await response.json();
+            // import DOMPurify from 'dompurify';
+            // DOMPurify is used to sanitize the JSON data to prevent XSS attacks
+            const jsonData = await response.text();
+            const sanitizedData = DOMPurify.sanitize(jsonData);
+            const data = JSON.parse(sanitizedData);
+
             setImages(data);
+        
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An error occurred');
+
         } finally {
             setLoading(false);
         }
@@ -57,6 +66,7 @@ const ContentManagementPanel = () => {
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files || e.target.files.length === 0) return;
 
+        
         const file = e.target.files[0];
         const formData = new FormData();
         formData.append('image', file);
@@ -71,7 +81,7 @@ const ContentManagementPanel = () => {
                 return;
             }
 
-            const response = await fetch(`${window.API_URL}/api/upload`, {
+            const response = await api.fetch(`/api/upload/`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -110,7 +120,7 @@ const ContentManagementPanel = () => {
                 return;
             }
 
-            const response = await fetch(`${window.API_URL}/api/images/delete`, {
+            const response = await api.fetch(`/api/upload/delete`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

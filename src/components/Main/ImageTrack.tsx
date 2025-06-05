@@ -1,6 +1,7 @@
 // src/components/ImageTrack.tsx
 import { useRef, useState, useEffect, useCallback } from 'react';
 import './Styles/ImageTrack.scss';
+import { api } from '../../utils/api';
 
 // Define profile data to make it more maintainable
 interface ProfileItem {
@@ -9,6 +10,7 @@ interface ProfileItem {
     image: string;
     title: string;
 }
+
 
 interface ImageTrackProps {
     title?: string;
@@ -24,12 +26,13 @@ const ImageTrack: React.FC<ImageTrackProps> = ({ title = "Hyperiya's Profiles" }
     useEffect(() => {
         const fetchProfiles = async () => {
             try {
-                const response = await fetch(`${window.API_URL}/api/profiles`);
+                const response = await api.fetch(`/api/profiles`);
 
                 if (response.ok) {
                     const data = await response.json();
                     setProfileItems(data);
                 }
+            
             } catch (error) {
                 console.error('Error fetching profiles:', error);
             }
@@ -102,6 +105,7 @@ const ImageTrack: React.FC<ImageTrackProps> = ({ title = "Hyperiya's Profiles" }
 
         // Apply the same parallax position to all images
         const images = trackRef.current.getElementsByTagName("img");
+        
         for (const image of Array.from(images)) {
             if (!instant) {
                 image.animate({
@@ -313,7 +317,7 @@ const ImageTrack: React.FC<ImageTrackProps> = ({ title = "Hyperiya's Profiles" }
         };
     }, [mouseDownAt, startX, prevPercentage, animateTrack, ignoreDrag, updateTrackDimensions, initPosition, percentage]);
 
-    // amazonq-ignore-next-line
+    
     return (
         <div
             className="image-track"

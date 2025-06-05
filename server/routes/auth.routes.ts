@@ -59,6 +59,7 @@ async function createInitialUser() {
 createInitialUser();
 
 // Login route
+
 router.post('/login', loginLimiter, async (req: express.Request, res: express.Response) => {
     try {
         const { username, password } = req.body;
@@ -94,6 +95,7 @@ router.post('/login', loginLimiter, async (req: express.Request, res: express.Re
             user.role
         );
 
+        
         await res.json({ token: token });
         return;
     } catch (error) {
@@ -101,6 +103,7 @@ router.post('/login', loginLimiter, async (req: express.Request, res: express.Re
         res.status(500).json({ message: 'Server error' });
     }
 });
+
 
 router.post('/register', authenticateToken, async (req: express.Request, res: express.Response) => {
     try {

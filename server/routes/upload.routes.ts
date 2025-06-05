@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import fs from 'fs';
 import { permissionMap } from '../config/permissions.ts';
-import { authenticateToken, getTokenPerms } from '../middleware/auth.middleware.ts';
+import { authenticateToken, getToken, getTokenPerms } from '../middleware/auth.middleware.ts';
 import { requestLimiter } from '../middleware/rateLimiter.middleware.ts';
 import { upload, uploadsDir } from '../config/multer.config.ts';
 
@@ -10,6 +10,7 @@ import { upload, uploadsDir } from '../config/multer.config.ts';
 
 
 const router = express.Router();
+
 
 router.post('/', requestLimiter, authenticateToken, upload.single('image'), async (req: express.Request, res: express.Response) => {
     try {
@@ -54,13 +55,15 @@ router.post('/', requestLimiter, authenticateToken, upload.single('image'), asyn
     }
 });
 
-router.get('/', requestLimiter, authenticateToken, async (req: express.Request, res: express.Response) => {
+router.get('/', requestLimiter, authenticateToken, express.json(), async (req: express.Request, res: express.Response) => {
     try {
         const authHeader = req.headers['authorization'];
-        const token = authHeader && authHeader.split(' ')[1];
+        const token = getToken(authHeader);
+        console.log('authheader', authHeader)
 
         if (!token) {
-            res.status(401).json({ message: 'Unauthorized' });
+            console.log('fuck')
+            res.status(401).json({ message: 'Unauthorizeds' });
             return;
         }
 
@@ -81,6 +84,7 @@ router.get('/', requestLimiter, authenticateToken, async (req: express.Request, 
         // Read the uploads directory
         fs.readdir(uploadsDir, (err, files) => {
             if (err) {
+                
                 console.error('Error reading uploads directory:', err);
                 res.status(500).json({ message: 'Failed to read uploads directory' });
                 return;
@@ -106,7 +110,8 @@ router.get('/', requestLimiter, authenticateToken, async (req: express.Request, 
     }
 });
 
-router.post('/delete', requestLimiter, authenticateToken, async (req: express.Request, res: express.Response) => {
+
+router.post('/delete', requestLimiter, authenticateToken, express.json(), async (req: express.Request, res: express.Response) => {
     try {
         const authHeader = req.headers['authorization'];
         const token = authHeader && authHeader.split(' ')[1];
@@ -126,6 +131,7 @@ router.post('/delete', requestLimiter, authenticateToken, async (req: express.Re
             return;
         }
 
+        console.log(req.body)
         const { filename } = req.body;
 
         if (!filename) {

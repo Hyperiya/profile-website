@@ -1,6 +1,8 @@
 // src/components/Admin/ProfileManagementPanel.tsx
 import { useState, useEffect } from 'react';
 import './ProfileManagementPanel.scss';
+import { api } from '../../utils/api';
+import ImageUploader from './ImageUploader';
 
 interface Profile {
     id: string;
@@ -17,6 +19,7 @@ const ProfileManagementPanel = () => {
     const [editingProfile, setEditingProfile] = useState<Profile | null>(null);
     const [isCreating, setIsCreating] = useState(false);
     const [uploadedImages, setUploadedImages] = useState<{ filename: string, path: string }[]>([]);
+    const [isImageUploaderOpen, setIsImageUploaderOpen] = useState(false);
 
     // Form states
     const [id, setId] = useState('');
@@ -34,7 +37,7 @@ const ProfileManagementPanel = () => {
                 return;
             }
 
-            const response = await fetch(`${window.API_URL}/api/images`, {
+            const response = await api.get(`/api/upload`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -44,8 +47,20 @@ const ProfileManagementPanel = () => {
                 throw new Error('Failed to fetch images');
             }
 
+
             const data = await response.json();
-            setUploadedImages(data);
+            // Sanitize image data to prevent XSS
+            const sanitizedData = Array.isArray(data)
+                ? data.filter(img =>
+                    typeof img.filename === 'string' &&
+                    typeof img.path === 'string' &&
+                    !img.path.includes('<') &&
+                    !img.path.includes('>') &&
+                    !img.filename.includes('<') &&
+                    !img.filename.includes('>')
+                )
+                : [];
+            setUploadedImages(sanitizedData);
         } catch (err) {
             console.error('Error fetching images:', err);
         }
@@ -54,8 +69,17 @@ const ProfileManagementPanel = () => {
     // Fetch profiles
     const fetchProfiles = async () => {
         try {
+            const token = localStorage.getItem('admin_token');
+            if (!token) {
+                setError('Authentication required');
+                return;
+            }
             setLoading(true);
-            const response = await fetch(`${window.API_URL}/api/profiles`);
+            const response = await api.fetch(`/api/profiles/`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
 
             if (!response.ok) {
                 throw new Error('Failed to fetch profiles');
@@ -98,6 +122,8 @@ const ProfileManagementPanel = () => {
     };
 
     const handleDeleteProfile = async (profileId: string) => {
+        // The following confirmation uses only in-memory data and does not introduce SQL injection risk.
+
         if (!window.confirm(`Are you sure you want to delete the "${profiles.find(p => p.id === profileId)?.title}" profile?`)) {
             return;
         }
@@ -110,7 +136,7 @@ const ProfileManagementPanel = () => {
                 return;
             }
 
-            const response = await fetch(`${window.API_URL}/api/profiles/delete`, {
+            const response = await api.fetch(`/api/profiles/delete`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -142,7 +168,7 @@ const ProfileManagementPanel = () => {
                 return;
             }
 
-            let endpoint = `${window.API_URL}/api/profiles/update`;
+            let endpoint = `/api/profiles/update`;
             let body: any = {
                 title,
                 url,
@@ -151,7 +177,7 @@ const ProfileManagementPanel = () => {
             };
 
             if (isCreating) {
-                endpoint = `${window.API_URL}/api/profiles/create`;
+                endpoint = `/api/profiles/create`;
                 body.id = id.toLowerCase().replace(/\s+/g, '-');
             } else if (editingProfile) {
                 body.id = editingProfile.id;
@@ -159,7 +185,7 @@ const ProfileManagementPanel = () => {
                 return;
             }
 
-            const response = await fetch(endpoint, {
+            const response = await api.fetch(endpoint, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -206,10 +232,14 @@ const ProfileManagementPanel = () => {
                         className="profile-card"
                         style={{ borderColor: profile.color }}
                     >
-                        <img src={profile.image} alt={profile.title} />
+                        <img
+                            src={profile.image}
+
+                            alt={profile.title.replace(/</g, "<").replace(/>/g, ">")}
+                        />
                         <div className="profile-info">
-                            <h3>{profile.title}</h3>
-                            <p>{profile.url}</p>
+                            <h3>{profile.title.replace(/</g, "<").replace(/>/g, ">")}</h3>
+                            <p>{profile.url.replace(/</g, "<").replace(/>/g, ">")}</p>
                             <div className="color-indicator" style={{ backgroundColor: profile.color }}></div>
                         </div>
                         <div className="card-actions">
@@ -262,35 +292,63 @@ const ProfileManagementPanel = () => {
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="image">Image</label>
-                                <select
-                                    id="image"
-                                    value={image}
-                                    onChange={(e) => setImage(e.target.value)}
-                                    required
-                                    className="image-dropdown"
-                                >
-                                    <option value="">Select an image</option>
-                                    {uploadedImages.map((img) => (
-                                        <option key={img.filename} value={img.path}>
-                                            {img.filename}
-                                        </option>
-                                    ))}
-                                </select>
-                                {image && (
-                                    <div className="image-preview">
-                                        <img src={image} alt="Selected" />
+                                <label htmlFor="image-select">Image</label>
+                                <div className="image-section">
+                                    <div className="image-actions">
+                                        <div className="image-upload-container">
+                                            <button 
+                                                type="button" 
+                                                className={`upload-new-image-btn ${isImageUploaderOpen ? 'active' : ''}`}
+                                                onClick={() => setIsImageUploaderOpen(!isImageUploaderOpen)}
+                                            >
+                                                {isImageUploaderOpen ? 'Cancel Upload' : 'Upload New Image'}
+                                            </button>
+                                        </div>
+                                        <select
+                                            id="image-select"
+                                            value={image}
+                                            onChange={(e) => setImage(e.target.value)}
+                                            required
+                                            className="image-dropdown"
+                                        >
+                                            <option value="">Select an image</option>
+                                            {uploadedImages.map((img) => (
+                                                <option key={img.filename} value={img.path}>
+                                                    {img.filename}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </div>
-                                )}
+                                    
+                                    <div className="image-uploader-compartment">
+                                        {isImageUploaderOpen && (
+                                            <ImageUploader 
+                                                isOpen={isImageUploaderOpen}
+                                                onClose={() => setIsImageUploaderOpen(false)}
+                                                onUploadSuccess={(imageData) => {
+                                                    setUploadedImages(prev => [...prev, imageData]);
+                                                    setImage(imageData.path);
+                                                    setIsImageUploaderOpen(false);
+                                                }}
+                                            />
+                                        )}
+                                    </div>
+                                    
+                                    {image && (
+                                        <div className="image-preview">
+                                            <img src={image} alt="Selected" />
+                                        </div>
+                                    )}
+                                </div>
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="image">Image Path</label>
+                                <label htmlFor="url">URL</label>
                                 <input
                                     type="text"
-                                    id="image"
-                                    value={image}
-                                    onChange={(e) => setImage(e.target.value)}
+                                    id="url"
+                                    value={url}
+                                    onChange={(e) => setUrl(e.target.value.replace(/</g, "").replace(/>/g, ""))}
                                     required
                                 />
                             </div>
@@ -321,8 +379,10 @@ const ProfileManagementPanel = () => {
                     </div>
                 </div>
             )}
+
         </div>
     );
 };
+
 
 export default ProfileManagementPanel;
