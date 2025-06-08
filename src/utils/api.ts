@@ -16,6 +16,26 @@ const getCsrfToken = (): string | null => {
     return null;
 };
 
+// Fetch CSRF token from backend
+export const fetchCsrfToken = async (): Promise<void> => {
+    try {
+        const response = await fetch(`https://api.hyperiya.com/api/auth/csrf-token`, {
+            method: 'GET',
+            credentials: 'include',
+        });
+        
+        // Get token from response
+        const data = await response.json();
+        if (data.csrfToken) {
+            // Manually set the cookie on the frontend domain
+            document.cookie = `XSRF-TOKEN=${data.csrfToken}; path=/; SameSite=Lax`;
+        }
+    } catch (error) {
+        console.error('Failed to fetch CSRF token:', error);
+    }
+};
+
+
 interface RequestOptions extends RequestInit {
     skipCsrf?: boolean;
 }
@@ -41,9 +61,18 @@ export const api = {
 
         // Add CSRF token to non-GET requests
         if (!skipCsrf && !['GET', 'HEAD', 'OPTIONS'].includes(options.method || 'GET')) {
-            const csrfToken = getCsrfToken();
+            // Ensure we have a CSRF token before making non-GET requests
+            let csrfToken = getCsrfToken();
+            if (!csrfToken) {
+                // If no token exists, fetch it from the server first
+                await fetchCsrfToken();
+                csrfToken = getCsrfToken();
+            }
+            
             if (csrfToken) {
                 headersObj['X-XSRF-TOKEN'] = csrfToken;
+            } else {
+                console.error('CSRF token not found even after fetching');
             }
         }
 
@@ -56,7 +85,7 @@ export const api = {
         };
 
 
-        const response = await fetch(`${window.API_URL}${url}`, fetchOptions);
+        const response = await fetch(`https://api.hyperiya.com${url}`, fetchOptions);
 
         // Handle 403 errors specifically for CSRF token issues
         if (response.status === 403) {

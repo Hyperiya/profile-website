@@ -8,7 +8,7 @@ declare module 'express-session' {
 }
 
 // Generate a random CSRF token
-const generateToken = (): string => {
+export const generateToken = (): string => {
     return crypto.randomBytes(32).toString('hex');
 };
 
@@ -29,7 +29,7 @@ export const setCsrfToken = (req: Request, res: Response, next: NextFunction): v
     res.cookie('XSRF-TOKEN', req.session.csrfToken, {
         httpOnly: false, // Client-side JavaScript needs to read this
         secure: process.env.NODE_ENV === 'production', // Only send over HTTPS in production
-        sameSite: 'strict',
+        sameSite: 'lax',
         path: '/'
     });
 
