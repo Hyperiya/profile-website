@@ -16,17 +16,19 @@ import AudioPlayer from './components/Main/AudioPlayer'
 
 import { Sakura } from './Sakura'
 
-import { api } from './utils/api'
+import { api, fetchCsrfToken } from './utils/api'
 
 function App() {
 
   useEffect(() => {
+    // Fetch CSRF token when app loads
+    fetchCsrfToken();
+    
     // Track visitor
     const trackVisit = async () => {
       try {
         // Get visitor ID from localStorage or create new one
         let visitorId = localStorage.getItem('visitor_id');
-
 
         console.log(window.API_URL)
         const response = await api.fetch(`/api/analytics/record-visit`, {

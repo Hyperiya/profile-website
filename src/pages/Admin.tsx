@@ -1,15 +1,24 @@
 // src/pages/Admin.tsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Styles/Admin.scss';
 import { useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
 import { api } from '../utils/api';
 // import Loading from '../components/Utils/Loading';
+=======
+import { api, fetchCsrfToken } from '../utils/api';
+>>>>>>> dbf328b3c5659960639e91d8c2abe04b260e2998
 
 function Admin() {
     const [error, setError] = useState('');
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    
+    // Fetch CSRF token when component mounts
+    useEffect(() => {
+        fetchCsrfToken();
+    }, []);
 
 
     // Check if already authenticated
@@ -55,7 +64,10 @@ function Admin() {
     };
 
     return (
+<<<<<<< HEAD
         // <Loading ></Loading>
+=======
+>>>>>>> dbf328b3c5659960639e91d8c2abe04b260e2998
         <div className="admin-login">
             <div className="login-container">
                 <h1>Admin Access</h1>

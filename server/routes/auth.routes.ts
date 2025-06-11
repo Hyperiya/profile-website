@@ -6,7 +6,7 @@ import { permissions } from '../config/permissions.ts';
 import { loginLimiter } from '../middleware/rateLimiter.middleware.ts';
 import { authenticateToken, storeToken } from '../middleware/auth.middleware.ts';
 import validator from 'validator';
-
+import { generateToken } from '../middleware/csrf.middleware.ts';
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || '';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
@@ -57,6 +57,21 @@ async function createInitialUser() {
 
 // Call this function when the server starts
 createInitialUser();
+
+// CSRF token endpoint
+router.get('/csrf-token', (req: express.Request, res: express.Response) => {
+    if (!req.session) {
+        res.status(500).json({ error: 'Session middleware required' });
+        return;
+    }
+    
+    if (!req.session.csrfToken) {
+        req.session.csrfToken = generateToken();
+    }
+    
+    res.json({ csrfToken: req.session.csrfToken });
+});
+
 
 // Login route
 

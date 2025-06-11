@@ -7,9 +7,9 @@ import path from 'path';
 import { VisitorSchema, DailyVisitSchema } from '../models/visitor.model.ts';
 import dotenv from 'dotenv';
 
-dotenv.config({ path: path.resolve(process.cwd() + '\\.env.local' )});
+dotenv.config({ path: path.resolve(process.cwd(), '.env.local' )});
 
-console.log(`Using environment file: ${path.resolve(process.cwd() + '\\.env.local' )}`);
+console.log(`Using environment file: ${path.resolve(process.cwd(), '.env.local' )}`);
 
 // Load environment variables
 const USER_DB_URI = process.env.USER_DB_URI || '';
