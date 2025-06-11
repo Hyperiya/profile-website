@@ -3,8 +3,74 @@ import { v4 as uuidv4 } from 'uuid';
 import { Visitor, DailyVisit } from '../config/db.config.ts';
 import { permissionMap } from '../config/permissions.ts';
 import { authenticateToken, getToken, getTokenPerms } from '../middleware/auth.middleware.ts';
+import dotenv from 'dotenv';
+import path from 'path';
+
+dotenv.config({ path: path.resolve(process.cwd() + '\\.env.local' )});
 
 const router = express.Router();
+
+const RESTRICTED_STATES = process.env.RESTRICTED_STATES || '';
+const RESTRICTED_TOWNS = process.env.RESTRICTED_TOWNS || '';
+const ALLOWED_USERS = process.env.ALLOWED_USERS || '';
+
+// Update the checkIfRestricted function to use environment variables
+async function checkIfRestricted(ip: string): Promise<boolean> {
+  try {
+    // Use a free IP geolocation API
+    const response = await fetch(`http://ip-api.com/json/${ip}?fields=status,city,regionName`);
+    const data = await response.json();
+    
+    if (data.status !== 'success') return false;
+    
+    // Parse restricted states and towns from environment variables
+    const restrictedStates = RESTRICTED_STATES.split(',').map(s => s.trim().toLowerCase());
+    const restrictedTowns = RESTRICTED_TOWNS.split(',').map(t => t.trim().toLowerCase());
+    
+    // Check if location matches any restricted state and town combination
+    return restrictedStates.includes(data.regionName.toLowerCase()) && 
+           restrictedTowns.includes(data.city.toLowerCase());
+  } catch (error) {
+    console.error('IP geolocation error:', error);
+    return false;
+  }
+}
+
+// Update the visitor-metrics route
+router.post('/visitor-metrics', async (req, res) => {
+  try {
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    const userAgent = req.body.system || '';
+    
+    // Parse allowed users from environment variable
+    const allowedUsers = ALLOWED_USERS.split(',').map(u => u.trim().toUpperCase());
+    
+    // Check if device is in allowed list
+    const isAllowedDevice = allowedUsers.some(user => 
+      userAgent.toUpperCase().includes(user)
+    );
+    
+    // Check if IP is from restricted location
+    let isRestricted = false;
+    if (typeof ip === 'string' && !isAllowedDevice) {
+      isRestricted = await checkIfRestricted(ip);
+    }
+    
+    // Return generic-looking analytics data
+    res.json({
+      session_id: uuidv4(),
+      display_config: isRestricted ? 'special_ne1' : 'default',
+      metrics_recorded: true,
+      page_load: Math.floor(Math.random() * 500) + 300,
+      viewport: req.body.screen || '1920x1080'
+    });
+  } catch (err) {
+    res.json({ 
+      metrics_recorded: false,
+      error_code: 'analytics_error'
+    });
+  }
+});
 
 
 router.post('/record-visit', async (req: express.Request, res: express.Response) => {

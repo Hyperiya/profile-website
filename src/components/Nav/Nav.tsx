@@ -1,12 +1,28 @@
 import { Link } from "react-router-dom"
 import './Styles/Nav.scss'
 import DiscordProfile from './DiscordProfile'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 
 function Nav() {
     const [showProfile, setShowProfile] = useState(false);
 
+    const [data, setData] = useState<any>();
+
+    async function getProfileStatus() {
+        const response = await fetch('https://api.lanyard.rest/v1/users/328275328373882880');
+        const json = await response.json();
+        const data = json.data;
+
+        setData(data)
+
+        console.log(data)
+    };
+
+    useEffect(() => {
+        getProfileStatus();
+    }, [])
+    
     return (
         <nav className='nav'>
             <div className="navbar-container">
@@ -17,14 +33,14 @@ function Nav() {
                 >
                     <img
                         className="navbar-avatar"
-                        src="https://cdn.discordapp.com/avatars/328275328373882880/01a39df8f7d912562a0bb11a368e50e3.webp?size=64"
+                        src={`https://cdn.discordapp.com/avatars/${data?.discord_user?.id}/${data?.discord_user?.avatar}.webp?size=orig&quality=lossless`}
                         alt="Profile"
                     />
-                    <span className="navbar-username">hyperiya</span>
+                    <span className="navbar-username">{data?.discord_user?.display_name}</span>
 
                     {showProfile && (
                         <div className="discord-profile-popup">
-                            <DiscordProfile />
+                            <DiscordProfile data={data}/>
                         </div>
                     )}
                 </div>

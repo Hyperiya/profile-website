@@ -3,7 +3,7 @@ import { useState } from 'react';
 import './Styles/Admin.scss';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../utils/api';
-import Loading from '../components/Utils/Loading';
+// import Loading from '../components/Utils/Loading';
 
 function Admin() {
     const [error, setError] = useState('');
@@ -55,38 +55,38 @@ function Admin() {
     };
 
     return (
-        <Loading ></Loading>
-        // <div className="admin-login">
-        //     <div className="login-container">
-        //         <h1>Admin Access</h1>
-        //         <form onSubmit={handleLogin}>
-        //             <div className="form-group">
-        //                 <label htmlFor="username">Username</label>
-        //                 <input
-        //                     type="text"
-        //                     id="username"
-        //                     value={username}
-        //                     onChange={(e) => setUsername(e.target.value)}
-        //                     required
-        //                 />
-        //             </div>
-        //             <div className="form-group">
-        //                 <label htmlFor="password">Password</label>
-        //                 <input
-        //                     type="password"
-        //                     id="password"
-        //                     value={password}
-        //                     onChange={(e) => setPassword(e.target.value)}
-        //                     required
-        //                 />
-        //             </div>
-        //             {error && <div className="error-message">{error}</div>}
-        //             <button type="submit">
-        //                 Login
-        //             </button>
-        //         </form>
-        //     </div>
-        // </div>
+        // <Loading ></Loading>
+        <div className="admin-login">
+            <div className="login-container">
+                <h1>Admin Access</h1>
+                <form onSubmit={handleLogin}>
+                    <div className="form-group">
+                        <label htmlFor="username">Username</label>
+                        <input
+                            type="text"
+                            id="username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="password">Password</label>
+                        <input
+                            type="password"
+                            id="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    {error && <div className="error-message">{error}</div>}
+                    <button type="submit">
+                        Login
+                    </button>
+                </form>
+            </div>
+        </div>
     );
 }
 

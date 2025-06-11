@@ -5,72 +5,60 @@ import './Styles/DiscordProfile.scss';
 
 
 
-function DiscordProfile() {
+function DiscordProfile({data}: any) {
     const [status, setStatus] = useState('offline');
     const [activity, setActivity] = useState('Offline');
     const [statusImg, setStatusImg] = useState('/discord/offline.webp');
-    const [data, setData] = useState<any>();
+
+    function getStatusImage(data: any) {
+        console.log(data.discord_status)
+        const status = data.discord_status;
+        switch (status) {
+            case 'online': {
+                setStatusImg("/discord/online.webp")
+                break;
+            };
+            case 'idle': {
+                setStatusImg("/discord/idle.webp")
+                break;
+            };
+            case 'dnd': {
+                setStatusImg("/discord/dnd.webp")
+                break;
+            };
+            default: {
+                setStatusImg("/discord/offline.webp")
+                break;
+            };
+        }
+    };
+
+    async function getProfileStatus() {
+        if (data.status) {
+            setStatus(data.discord_status);
+        }
+
+        getStatusImage(data);
+
+        switch (data.discord_status) {
+            case 'online':
+                setActivity("Online");
+                break;
+            case 'idle':
+                setActivity("Idle");
+                break;
+            case 'dnd':
+                setActivity("Do Not Disturb");
+                break;
+            default:
+                console.log(data.discord_status)
+                setActivity("Offline");
+        }
+    };
 
     useEffect(() => {
-
-        function getStatusImage(data: any) {
-            console.log(data.discord_status)
-            const status = data.discord_status;
-            switch (status) {
-                case 'online': {
-                    setStatusImg("/discord/online.webp")
-                    break;
-                };
-                case 'idle': {
-                    setStatusImg("/discord/idle.webp")
-                    break;
-                };
-                case 'dnd': {
-                    setStatusImg("/discord/dnd.webp")
-                    break;
-                };
-                default: {
-                    setStatusImg("/discord/offline.webp")
-                    break;
-                };
-            }
-        };
-
-        async function getProfileStatus() {
-            const response = await fetch('https://api.lanyard.rest/v1/users/328275328373882880');
-            const json = await response.json();
-            const data = json.data;
-
-            setData(data)
-
-            console.log(data)
-
-            if (data.status) {
-                setStatus(data.discord_status);
-            }
-
-            getStatusImage(data);
-
-            switch (data.discord_status) {
-                case 'online':
-                    setActivity("Online");
-                    break;
-                case 'idle':
-                    setActivity("Idle");
-                    break;
-                case 'dnd':
-                    setActivity("Do Not Disturb");
-                    break;
-                default:
-                    console.log(data.discord_status)
-                    setActivity("Offline");
-            }
-        };
         getProfileStatus();
-    }, [])
-
-
-
+    }, [data]);
 
     return (
         <div className={`root`}>
@@ -82,7 +70,7 @@ function DiscordProfile() {
                 <div className="color-banner" style={{ background: "#533b6c" }}></div>
             </div>
             <a
-                href={`https://discordapp.com/users/data?.discord_user?.id`}
+                href={`https://discordapp.com/users/${data?.discord_user?.id}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="discord-link"
