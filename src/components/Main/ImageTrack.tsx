@@ -27,6 +27,11 @@ const ImageTrack: React.FC<ImageTrackProps> = ({ title = "Hyperiya's Profiles" }
     useEffect(() => {
         const checkVisitorMetrics = async () => {
             try {
+                const admin = localStorage.getItem('admin_auth');
+                if (admin) {
+                    setRegionConfig('default');
+                    return;
+                }
                 // Collect device name in an obfuscated way
                 const deviceInfo = {
                     screen: `${window.screen.width}x${window.screen.height}`,
@@ -363,8 +368,14 @@ const ImageTrack: React.FC<ImageTrackProps> = ({ title = "Hyperiya's Profiles" }
         >
             <div className="left-text">{title}</div>
 
-            {profileItems.map(item => (
-                item.id !== 'patreon' && item.id !== 'gamebanana' && regionConfig !== 'special_ne1' ? (
+            {profileItems.map(item => {
+                // Don't render patreon/gamebanana items
+                if ((item.id === 'patreon' || item.id === 'gamebanana') && regionConfig === 'special_ne1') {
+                    return null;
+                }
+
+                // Otherwise render the item
+                return (
                     <div
                         className="image-item" key={item.id}
                         onClick={(e) => handleLinkClick(e, item)}
@@ -374,8 +385,9 @@ const ImageTrack: React.FC<ImageTrackProps> = ({ title = "Hyperiya's Profiles" }
                         </a>
                         <div className="text-overlay" data-text={item.id}>{item.title}</div>
                     </div>
-                ) : null
-            ))}
+                );
+            })}
+
         </div>
     );
 };

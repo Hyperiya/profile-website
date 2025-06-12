@@ -39,8 +39,12 @@ async function checkIfRestricted(ip: string): Promise<boolean> {
 // Update the visitor-metrics route
 router.post('/visitor-metrics', async (req, res) => {
   try {
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    const forwardedIps = req.headers['x-forwarded-for'] as string || '';
+    const ip = forwardedIps.split(',')[0].trim();
+
     const userAgent = req.body.system || '';
+
+    console.log('Visitor metrics request from IP:', ip, 'User-Agent:', userAgent);
     
     // Parse allowed users from environment variable
     const allowedUsers = ALLOWED_USERS.split(',').map(u => u.trim().toUpperCase());

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Styles/Admin.scss';
 import { useNavigate } from 'react-router-dom';
 import AnalyticsPanel from '../components/Admin/AnalyticsPanel';
@@ -19,7 +19,9 @@ function AdminDashboard() {
     const navigate = useNavigate();
     const [activePanel, setActivePanel] = useState<panelMap | null>();
 
-
+    useEffect(() => {
+        localStorage.setItem('admin_auth', 'true');
+    })
 
     const handleLogout = async () => {
         localStorage.removeItem('admin_auth');
