@@ -370,7 +370,7 @@ const ImageTrack: React.FC<ImageTrackProps> = ({ title = "Hyperiya's Profiles" }
 
             {profileItems.map(item => {
                 // Don't render patreon/gamebanana items
-                if ((item.id === 'patreon' || item.id === 'gamebanana') && regionConfig === 'special_ne1') {
+                if ((item.id === 'patreon' || item.id === 'gamebanana' || item.id === 'pinterest') && regionConfig === 'special_ne1') {
                     return null;
                 }
 
